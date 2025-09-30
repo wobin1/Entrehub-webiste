@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #1e293b;
+  --navy-primary: #1e3a8a;
+  --navy-secondary: #3b82f6;
+  --navy-light: #dbeafe;
+  --navy-dark: #1e40af;
+  --accent-blue: #60a5fa;
+  --gray-light: #f8fafc;
+  --gray-medium: #64748b;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  line-height: 1.6;
+  color: var(--foreground);
+  background: var(--background);
+  overflow-x: hidden;
+}
+
+/* Professional Navy Button Styles */
+.btn-primary {
+  background: linear-gradient(135deg, var(--navy-primary), var(--navy-dark));
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--navy-primary);
+  border: 2px solid var(--navy-light);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3);
+  background: linear-gradient(135deg, var(--navy-dark), var(--navy-primary));
+}
+
+.btn-secondary:hover {
+  background: var(--navy-light);
+  border-color: var(--navy-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
