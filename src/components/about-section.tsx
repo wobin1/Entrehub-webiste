@@ -60,7 +60,7 @@ export default function AboutSection() {
             </div>
             
             <p className="text-lg text-slate-600 leading-relaxed">
-              Founded in <span className="font-semibold text-blue-700">Kaduna, Nigeria</span>, we bridge the gap between local businesses and global opportunities. Our mission is simple: to be your trusted partner in sustainable growth and digital excellence through data-driven strategies and creative innovation.
+              We bridge the gap between local businesses and global opportunities. Our mission is simple: to be your trusted partner in sustainable growth and digital excellence through data-driven strategies and creative innovation.
             </p>
           </div>
 

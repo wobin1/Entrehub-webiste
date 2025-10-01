@@ -1,6 +1,7 @@
 'use client';
 
 import { X, Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
+import Image from 'next/image';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -38,11 +39,17 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
 
         {/* Header */}
         <div className="p-8 pb-6">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">E</span>
+          <div className="flex items-center mb-6">
+            <div className="w-10 h-10 rounded-xl overflow-hidden mr-4 shadow-lg border-2 border-blue-300/30">
+              <Image 
+                src="/images/logo.jpeg" 
+                alt="ENTREHUB Logo" 
+                width={40} 
+                height={40} 
+                className="object-cover w-full h-full"
+              />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900">Let&apos;s Talk!</h2>
+            <span className="text-xl font-bold">ENTREHUB</span>
           </div>
           <p className="text-slate-600 leading-relaxed">
             Ready to transform your digital presence? Get in touch with us today and let&apos;s discuss your project.
@@ -57,7 +64,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             </div>
             <div>
               <p className="font-bold text-slate-900 text-lg">Phone</p>
-              <p className="text-slate-600 font-medium">+234 812 345 6789</p>
+              <p className="text-slate-600 font-medium">+234 812 972 1560</p>
             </div>
           </div>
 
@@ -67,7 +74,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             </div>
             <div>
               <p className="font-bold text-slate-900 text-lg">Email</p>
-              <p className="text-slate-600 font-medium">hello@entrehub.ng</p>
+              <p className="text-slate-600 font-medium">info@entrehubng.com</p>
             </div>
           </div>
 

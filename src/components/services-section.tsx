@@ -15,19 +15,19 @@ export default function ServicesSection() {
     },
     {
       icon: Share2,
-      title: 'Social Media Marketing',
-      description: 'We help you to promote your brand on Facebook, Twitter, Instagram with best social strategies.',
+      title: 'Digital Marketing',
+      description: 'We craft comprehensive digital marketing strategies to increase your visibility and customer engagement.',
       included: "What's included in service?",
     },
     {
       icon: Mail,
-      title: 'Email Marketing',
-      description: 'We help you to build your lists and send them newsletter regularly or simply an email blast.',
+      title: 'Brand Design & Communication',
+      description: 'From your logo to your messaging, we ensure your brand tells a powerful and consistent story.',
       included: "What's included in service?",
     },
     {
       icon: Search,
-      title: 'Search Engine Marketing',
+      title: 'Search Engine Optimization',
       description: 'We can effectively communicate with Google to help your website appears on top within minutes.',
       included: "What's included in service?",
     },
@@ -39,8 +39,8 @@ export default function ServicesSection() {
     },
     {
       icon: Megaphone,
-      title: 'Digital Advertising & PPC',
-      description: 'We create effective advertising buying strategy for partnering with a lot of major publishers.',
+      title: 'Training & Business Support',
+      description: 'We offer workshops and consulting to equip your team with the skills for sustainable growth.',
       included: "What's included in service?",
     },
   ];

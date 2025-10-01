@@ -30,7 +30,7 @@ export default function TeamSection() {
       fallback: 'bg-gradient-to-br from-blue-300 to-blue-500'
     },
     {
-      name: 'Finance Officer & Administrator',
+      name: 'MIRACLE OKOH EKO',
       role: 'Content Manager',
       image: '/team/team-4.jpeg',
       fallback: 'bg-gradient-to-br from-blue-400 to-blue-600'
@@ -53,7 +53,7 @@ export default function TeamSection() {
     {
       name: 'Leslie Alexander',
       role: 'Manager FashionWave&apos;s',
-      content: 'We&apos;ve seen incredible growth thanks to their tailored digital marketing strategies. The team&apos;s expertise in SEO and social media has been invaluable.',
+      content: "We've seen incredible growth thanks to their tailored digital marketing strategies. The team&apos;s expertise in SEO and social media has been invaluable.",
       avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face'
     },
     {
