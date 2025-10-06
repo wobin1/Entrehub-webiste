@@ -1,7 +1,9 @@
 'use client';
 
-import { X, Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
+import { useState } from 'react';
+import { X, Phone, Mail, MapPin, MessageCircle, Send } from 'lucide-react';
 import Image from 'next/image';
+import MessageFormModal from './message-form-modal';
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -9,6 +11,8 @@ interface ContactModalProps {
 }
 
 export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
+  const [showMessageForm, setShowMessageForm] = useState(false);
+
   if (!isOpen) return null;
 
   const whatsappNumber = "+2348123456789"; // Random Nigerian WhatsApp number
@@ -68,15 +72,18 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4 p-5 bg-gradient-to-r from-green-50 to-green-100/50 rounded-2xl border border-green-200/50 hover:shadow-md transition-all duration-300">
+          <button
+            onClick={() => setShowMessageForm(true)}
+            className="w-full flex items-center space-x-4 p-5 bg-gradient-to-r from-green-50 to-green-100/50 rounded-2xl border border-green-200/50 hover:shadow-md transition-all duration-300 cursor-pointer hover:scale-[1.02] transform"
+          >
             <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
               <Mail className="w-6 h-6 text-white" />
             </div>
-            <div>
+            <div className="text-left">
               <p className="font-bold text-slate-900 text-lg">Email</p>
               <p className="text-slate-600 font-medium">info@entrehubng.com</p>
             </div>
-          </div>
+          </button>
 
           <div className="flex items-center space-x-4 p-5 bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-2xl border border-orange-200/50 hover:shadow-md transition-all duration-300">
             <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -89,22 +96,35 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
           </div>
         </div>
 
-        {/* WhatsApp Button */}
-        <div className="p-8 pt-4">
+        {/* Action Buttons */}
+        <div className="p-8 pt-4 space-y-3">
           <button
             onClick={handleWhatsAppClick}
-            className="w-full bg-gradient-to-r from-green-500 via-green-600 to-green-700 text-white px-8 py-5 rounded-2xl font-bold text-lg hover:from-green-600 hover:via-green-700 hover:to-green-800 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center space-x-3"
+            className="w-full bg-gradient-to-r from-green-500 via-green-600 to-green-700 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-green-600 hover:via-green-700 hover:to-green-800 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center space-x-3"
           >
             <MessageCircle className="w-6 h-6" />
             <span>Chat on WhatsApp</span>
-            <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+          </button>
+
+          <button
+            onClick={() => setShowMessageForm(true)}
+            className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center space-x-3"
+          >
+            <Send className="w-6 h-6" />
+            <span>Send us a Message</span>
           </button>
           
-          <p className="text-center text-slate-500 mt-6 font-medium">
+          <p className="text-center text-slate-500 mt-4 font-medium">
             ⚡ We typically respond within 30 minutes during business hours
           </p>
         </div>
       </div>
+
+      {/* Message Form Modal */}
+      <MessageFormModal 
+        isOpen={showMessageForm} 
+        onClose={() => setShowMessageForm(false)} 
+      />
     </div>
   );
 }

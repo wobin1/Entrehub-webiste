@@ -163,39 +163,26 @@ export default function TeamSection() {
           {/* Team Grid */}
           <div 
             ref={teamScrollRef}
-            className="flex gap-8 overflow-x-auto scrollbar-hide pb-4"
+            className="flex gap-12 overflow-x-auto scrollbar-hide pb-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {teamMembers.map((member, index) => (
               <div key={index} className="text-center group flex-shrink-0 w-64">
-                {/* Avatar */}
-                <div className="aspect-[3/4] rounded-3xl mb-6 relative overflow-hidden group-hover:scale-105 transition-all duration-300 shadow-xl bg-slate-100 border-4 border-white">
+                {/* Circular Avatar */}
+                <div className="w-56 h-56 mx-auto rounded-full mb-6 relative overflow-hidden group-hover:scale-105 transition-all duration-300 shadow-2xl bg-slate-100 border-4 border-white">
                   <Image
                     src={member.image}
                     alt={member.name}
                     fill
-                    className="object-cover object-top"
-                    sizes="256px"
+                    className="object-cover object-[center_20%] scale-105"
+                    sizes="224px"
                   />
                   
                   {/* Enhanced Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent opacity-30 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   
                   {/* Professional Overlay Pattern */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-orange-500/20 opacity-0 group-hover:opacity-60 transition-opacity duration-500"></div>
-                  
-                  {/* Enhanced Name Overlay */}
-                  <div className="absolute bottom-6 left-6 right-6 transform translate-y-6 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                    <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 text-center shadow-xl border border-white/20">
-                      <h3 className="font-bold text-slate-900 text-base mb-2">
-                        {member.name}
-                      </h3>
-                      <p className="text-sm text-slate-600 font-medium">
-                        {member.role}
-                      </p>
-                      <div className="w-12 h-0.5 bg-gradient-to-r from-blue-600 to-orange-500 mx-auto mt-3 rounded-full"></div>
-                    </div>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-orange-500/20 opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
                 </div>
                 
                 <h3 className="font-bold text-slate-900 mb-2 text-lg">
