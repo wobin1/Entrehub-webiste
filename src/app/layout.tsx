@@ -21,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${oswald.variable} font-sans antialiased`}
       >
@@ -56,10 +56,10 @@ export default function RootLayout({
         </Script>
         <noscript>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img 
-            height="1" 
-            width="1" 
-            style={{display: 'none'}}
+          <img
+            height="1"
+            width="1"
+            style={{ display: 'none' }}
             src="https://www.facebook.com/tr?id=836073725799438&ev=PageView&noscript=1"
             alt=""
           />

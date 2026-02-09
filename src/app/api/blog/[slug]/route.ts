@@ -1,0 +1,186 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { updateBlogPostSchema } from '@/lib/validations/blog';
+import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
+
+// GET /api/blog/[slug] - Get a single blog post by slug
+export async function GET(
+    request: NextRequest,
+    { params }: { params: { slug: string } }
+) {
+    try {
+        const { slug } = params;
+
+        const post = await prisma.blogPost.findUnique({
+            where: { slug },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        name: true,
+                        avatar: true,
+                        bio: true,
+                    },
+                },
+                category: {
+                    select: {
+                        id: true,
+                        name: true,
+                        slug: true,
+                    },
+                },
+                tags: {
+                    select: {
+                        id: true,
+                        name: true,
+                        slug: true,
+                    },
+                },
+            },
+        });
+
+        if (!post) {
+            return NextResponse.json(
+                { error: 'Blog post not found' },
+                { status: 404 }
+            );
+        }
+
+        // Increment view count
+        await prisma.blogPost.update({
+            where: { slug },
+            data: { views: { increment: 1 } },
+        });
+
+        return NextResponse.json({ post });
+    } catch (error) {
+        console.error('Error fetching blog post:', error);
+        return NextResponse.json(
+            { error: 'Internal server error' },
+            { status: 500 }
+        );
+    }
+}
+
+// PUT /api/blog/[slug] - Update a blog post (admin only)
+export async function PUT(
+    request: NextRequest,
+    { params }: { params: { slug: string } }
+) {
+    try {
+        // Verify admin token
+        const authHeader = request.headers.get('authorization');
+        const token = extractTokenFromHeader(authHeader);
+
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const payload = await verifyToken(token);
+        if (!payload) {
+            return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+        }
+
+        const { slug } = params;
+        const body = await request.json();
+
+        // Validate input
+        const validatedData = updateBlogPostSchema.parse(body);
+
+        // Update blog post
+        const post = await prisma.blogPost.update({
+            where: { slug },
+            data: {
+                ...(validatedData.title && { title: validatedData.title }),
+                ...(validatedData.slug && { slug: validatedData.slug }),
+                ...(validatedData.excerpt && { excerpt: validatedData.excerpt }),
+                ...(validatedData.content && { content: validatedData.content }),
+                ...(validatedData.coverImage && { coverImage: validatedData.coverImage }),
+                ...(validatedData.featured !== undefined && { featured: validatedData.featured }),
+                ...(validatedData.published !== undefined && { published: validatedData.published }),
+                ...(validatedData.publishedAt !== undefined && {
+                    publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : null,
+                }),
+                ...(validatedData.readTime && { readTime: validatedData.readTime }),
+                ...(validatedData.authorId && { authorId: validatedData.authorId }),
+                ...(validatedData.categoryId && { categoryId: validatedData.categoryId }),
+                ...(validatedData.tagIds && {
+                    tags: {
+                        set: validatedData.tagIds.map((id) => ({ id })),
+                    },
+                }),
+            },
+            include: {
+                author: true,
+                category: true,
+                tags: true,
+            },
+        });
+
+        return NextResponse.json({ post });
+    } catch (error: any) {
+        console.error('Error updating blog post:', error);
+
+        if (error.name === 'ZodError') {
+            return NextResponse.json(
+                { error: 'Validation error', details: error.errors },
+                { status: 400 }
+            );
+        }
+
+        if (error.code === 'P2025') {
+            return NextResponse.json(
+                { error: 'Blog post not found' },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json(
+            { error: 'Internal server error' },
+            { status: 500 }
+        );
+    }
+}
+
+// DELETE /api/blog/[slug] - Delete a blog post (admin only)
+export async function DELETE(
+    request: NextRequest,
+    { params }: { params: { slug: string } }
+) {
+    try {
+        // Verify admin token
+        const authHeader = request.headers.get('authorization');
+        const token = extractTokenFromHeader(authHeader);
+
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const payload = await verifyToken(token);
+        if (!payload) {
+            return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+        }
+
+        const { slug } = params;
+
+        await prisma.blogPost.delete({
+            where: { slug },
+        });
+
+        return NextResponse.json({ message: 'Blog post deleted successfully' });
+    } catch (error: any) {
+        console.error('Error deleting blog post:', error);
+
+        if (error.code === 'P2025') {
+            return NextResponse.json(
+                { error: 'Blog post not found' },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json(
+            { error: 'Internal server error' },
+            { status: 500 }
+        );
+    }
+}

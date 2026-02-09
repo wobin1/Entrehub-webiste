@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { X, Send } from 'lucide-react';
 import Image from 'next/image';
+import { submitContactForm } from '@/lib/api/client';
 
 interface MessageFormModalProps {
   isOpen: boolean;
@@ -17,150 +18,194 @@ export default function MessageFormModal({ isOpen, onClose }: MessageFormModalPr
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   if (!isOpen) return null;
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Reset form and show success
-    setFormData({ name: '', email: '', phone: '', message: '' });
-    setIsSubmitting(false);
-    alert('Message sent successfully! We\'ll get back to you soon.');
-    onClose();
+    setSubmitStatus('idle');
+    setErrorMessage('');
+
+    try {
+      await submitContactForm(formData);
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', phone: '', message: '' });
+
+      // Auto-close after 2 seconds on success
+      setTimeout(() => {
+        onClose();
+        setSubmitStatus('idle');
+      }, 2000);
+    } catch (error: any) {
+      setSubmitStatus('error');
+      setErrorMessage(error.message || 'Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
   };
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      <div 
-        className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto relative animate-in fade-in-0 zoom-in-95 duration-200"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-8 h-8 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center transition-colors duration-200 z-10"
+          className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors z-10"
+          disabled={isSubmitting}
         >
-          <X className="w-4 h-4 text-slate-600" />
+          <X className="w-5 h-5 text-gray-600" />
         </button>
 
-        {/* Header */}
-        <div className="p-8 pb-6">
-          <div className="flex items-center mb-6">
-            <div className="w-10 h-10 rounded-xl overflow-hidden mr-4 shadow-lg border-2 border-blue-300/30">
-              <Image 
-                src="/images/logo.jpeg" 
-                alt="ENTREHUB Logo" 
-                width={40} 
-                height={40} 
-                className="object-cover w-full h-full"
+        <div className="grid md:grid-cols-2">
+          {/* Left Side - Image */}
+          <div className="relative h-64 md:h-auto bg-gradient-to-br from-blue-600 to-orange-500 p-8 flex flex-col justify-center">
+            <div className="relative z-10">
+              <h3 className="text-3xl font-bold text-white mb-4">
+                Let's Connect
+              </h3>
+              <p className="text-blue-50 mb-6">
+                Have a question or want to work together? Drop us a message and we'll get back to you as soon as possible.
+              </p>
+              <div className="space-y-3 text-blue-50">
+                <p className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-white rounded-full"></span>
+                  Quick response time
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-white rounded-full"></span>
+                  Professional support
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-white rounded-full"></span>
+                  Tailored solutions
+                </p>
+              </div>
+            </div>
+            <div className="absolute bottom-0 right-0 opacity-10">
+              <Image
+                src="/logo.png"
+                alt="EntreHub"
+                width={200}
+                height={200}
+                className="object-contain"
               />
             </div>
-            <span className="text-xl font-bold">Send us a Message</span>
           </div>
-          <p className="text-slate-600 leading-relaxed">
-            Fill out the form below and we&apos;ll get back to you as soon as possible.
-          </p>
-        </div>
 
-        {/* Message Form */}
-        <div className="px-8 pb-8">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-slate-700 mb-2">
-                Your Name *
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300"
-                placeholder="John Doe"
-              />
-            </div>
+          {/* Right Side - Form */}
+          <div className="p-8">
+            <h4 className="text-2xl font-bold text-gray-900 mb-6">Send us a message</h4>
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">
-                Email Address *
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300"
-                placeholder="john@example.com"
-              />
-            </div>
+            {submitStatus === 'success' && (
+              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-green-800 font-medium">✓ Message sent successfully!</p>
+                <p className="text-green-600 text-sm">We'll get back to you soon.</p>
+              </div>
+            )}
 
-            <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-slate-700 mb-2">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300"
-                placeholder="+234 812 345 6789"
-              />
-            </div>
+            {submitStatus === 'error' && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-800 font-medium">✗ {errorMessage}</p>
+              </div>
+            )}
 
-            <div>
-              <label htmlFor="message" className="block text-sm font-semibold text-slate-700 mb-2">
-                Your Message *
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleInputChange}
-                required
-                rows={5}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 resize-none"
-                placeholder="Tell us about your project..."
-              />
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  Name *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  placeholder="Your name"
+                />
+              </div>
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white px-8 py-4 rounded-2xl font-bold text-lg hover:from-blue-600 hover:via-blue-700 hover:to-blue-800 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              {isSubmitting ? (
-                <>
-                  <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Sending...</span>
-                </>
-              ) : (
-                <>
-                  <Send className="w-6 h-6" />
-                  <span>Send Message</span>
-                </>
-              )}
-            </button>
-          </form>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  placeholder="your@email.com"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone (Optional)
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  placeholder="+234 123 456 7890"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Message *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                  rows={4}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  placeholder="Tell us about your project or inquiry..."
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-5 h-5" />
+                    Send Message
+                  </>
+                )}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
