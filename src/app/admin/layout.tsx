@@ -56,7 +56,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                         router.push('/admin/login');
                     }
                 }
-            } catch (error) {
+            } catch (_error) {
                 localStorage.removeItem('admin_token');
                 if (pathname !== '/admin/login') {
                     router.push('/admin/login');

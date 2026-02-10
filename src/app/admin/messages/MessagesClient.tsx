@@ -56,8 +56,8 @@ export default function MessagesClient() {
             if (!res.ok) throw new Error('Failed to fetch messages');
             const data = await res.json();
             setMessages(data.messages || []);
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to load messages');
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Failed to load messages');
         } finally {
             setIsLoading(false);
         }
@@ -72,12 +72,11 @@ export default function MessagesClient() {
             if (!res.ok) throw new Error('Failed to update message');
 
             toast.success(`Message marked as ${status.toLowerCase()}`);
-            setMessages(prev => prev.map(m => m.id === id ? { ...m, status: status as any } : m));
             if (selectedMessage?.id === id) {
-                setSelectedMessage(prev => prev ? { ...prev, status: status as any } : null);
+                setSelectedMessage(prev => prev ? { ...prev, status: status as Message['status'] } : null);
             }
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to update message');
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Failed to update message');
         }
     };
 
@@ -100,8 +99,8 @@ export default function MessagesClient() {
             toast.success('Message deleted');
             setMessages(prev => prev.filter(m => m.id !== messageId));
             if (selectedMessage?.id === messageId) setSelectedMessage(null);
-        } catch (error: any) {
-            toast.error(error.message || 'Failed to delete message');
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : 'Failed to delete message');
         }
     };
 
@@ -195,7 +194,7 @@ export default function MessagesClient() {
                                     </div>
                                     <div className="text-xs text-gray-500 truncate mb-2">{m.email}</div>
                                     <p className="text-xs text-gray-600 line-clamp-1 italic">
-                                        "{m.message}"
+                                        &quot;{m.message}&quot;
                                     </p>
                                     <div className="mt-2 flex gap-1">
                                         <span className={`text-[10px] px-2 py-0.5 rounded-full border ${getStatusColor(m.status)}`}>

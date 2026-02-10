@@ -43,7 +43,7 @@ export default function ServicesAdminPage() {
                 const data = await res.json();
                 setServices(data);
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('Failed to fetch services');
         } finally {
             setIsLoading(false);
@@ -73,7 +73,7 @@ export default function ServicesAdminPage() {
             } else {
                 toast.error('Failed to delete service');
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('An error occurred');
         }
     };

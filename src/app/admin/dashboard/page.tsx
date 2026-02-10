@@ -1,4 +1,5 @@
 import { FileText, MessageSquare, Users, Eye } from 'lucide-react';
+import Link from 'next/link';
 
 export default async function AdminDashboard() {
     // In a real implementation, fetch these stats from the API
@@ -37,7 +38,7 @@ export default async function AdminDashboard() {
         <div>
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-                <p className="text-gray-600">Welcome back! Here's what's happening with your CMS.</p>
+                <p className="text-gray-600">Welcome back! Here&apos;s what&apos;s happening with your CMS.</p>
             </div>
 
             {/* Stats Grid */}
@@ -63,27 +64,27 @@ export default async function AdminDashboard() {
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-8">
                 <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <a
+                    <Link
                         href="/admin/blog/new"
                         className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-center"
                     >
                         <FileText className="w-8 h-8 mx-auto mb-2 text-gray-400" />
                         <p className="font-medium text-gray-700">Create New Post</p>
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                         href="/admin/messages"
                         className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors text-center"
                     >
                         <MessageSquare className="w-8 h-8 mx-auto mb-2 text-gray-400" />
                         <p className="font-medium text-gray-700">View Messages</p>
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                         href="/admin/settings"
                         className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-colors text-center"
                     >
                         <Users className="w-8 h-8 mx-auto mb-2 text-gray-400" />
                         <p className="font-medium text-gray-700">Manage Settings</p>
-                    </a>
+                    </Link>
                 </div>
             </div>
 
@@ -94,12 +95,12 @@ export default async function AdminDashboard() {
                     Your blog CMS is ready to use. Start by creating your first blog post or managing your content.
                 </p>
                 <div className="flex gap-4">
-                    <a
+                    <Link
                         href="/admin/blog"
                         className="px-6 py-2 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors"
                     >
                         Manage Blog
-                    </a>
+                    </Link>
                     <a
                         href="/blog"
                         target="_blank"

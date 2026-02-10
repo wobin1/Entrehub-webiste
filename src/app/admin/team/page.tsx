@@ -42,7 +42,7 @@ export default function TeamAdminPage() {
                 const data = await res.json();
                 setMembers(data);
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('Failed to fetch team members');
         } finally {
             setIsLoading(false);
@@ -72,7 +72,7 @@ export default function TeamAdminPage() {
             } else {
                 toast.error('Failed to delete member');
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('An error occurred');
         }
     };

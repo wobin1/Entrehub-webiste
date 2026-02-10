@@ -49,12 +49,12 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json({ category }, { status: 201 });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error creating category:', error);
 
-        if (error.name === 'ZodError') {
+        if (error instanceof Error && error.name === 'ZodError') {
             return NextResponse.json(
-                { error: 'Validation error', details: error.errors },
+                { error: 'Validation error', details: (error as unknown as { errors: unknown }).errors },
                 { status: 400 }
             );
         }

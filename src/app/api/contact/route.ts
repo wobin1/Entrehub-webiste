@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { contactMessageSchema, updateContactMessageSchema } from '@/lib/validations/contact';
+import { contactMessageSchema } from '@/lib/validations/contact';
 import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
 
 // POST /api/contact - Submit a contact form message (public)
@@ -26,12 +26,12 @@ export async function POST(request: NextRequest) {
             { message: 'Message sent successfully', id: message.id },
             { status: 201 }
         );
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error creating contact message:', error);
 
-        if (error.name === 'ZodError') {
+        if (error instanceof Error && error.name === 'ZodError') {
             return NextResponse.json(
-                { error: 'Validation error', details: error.errors },
+                { error: 'Validation error', details: (error as unknown as { errors: unknown }).errors },
                 { status: 400 }
             );
         }
@@ -66,6 +66,7 @@ export async function GET(request: NextRequest) {
 
         const skip = (page - 1) * limit;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const where: any = {};
         if (status) {
             where.status = status;
@@ -90,7 +91,7 @@ export async function GET(request: NextRequest) {
                 totalPages: Math.ceil(total / limit),
             },
         });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error fetching contact messages:', error);
         return NextResponse.json(
             { error: 'Internal server error' },

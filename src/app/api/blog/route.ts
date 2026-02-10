@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
         const isAdmin = token ? await verifyToken(token) : null;
 
         const skip = (page - 1) * limit;
-
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const where: any = {};
 
         // Only show published posts to non-admin users
@@ -143,12 +143,12 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json({ post }, { status: 201 });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error creating blog post:', error);
 
-        if (error.name === 'ZodError') {
+        if (error instanceof Error && error.name === 'ZodError') {
             return NextResponse.json(
-                { error: 'Validation error', details: error.errors },
+                { error: 'Validation error', details: (error as unknown as { errors: unknown }).errors },
                 { status: 400 }
             );
         }

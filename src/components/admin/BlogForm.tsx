@@ -9,19 +9,20 @@ import {
     getAdminAuthors
 } from '@/lib/api/admin';
 import RichTextEditor from '@/components/admin/RichTextEditor';
+import { Category, Tag, Author, BlogPost } from '@/types/admin';
 
 interface BlogFormProps {
-    initialData?: any;
+    initialData?: Partial<BlogPost>;
     isEdit?: boolean;
-    onSubmit: (data: any) => Promise<void>;
+    onSubmit: (data: Partial<BlogPost>) => Promise<void>;
 }
 
 export default function BlogForm({ initialData, isEdit = false, onSubmit }: BlogFormProps) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [categories, setCategories] = useState<any[]>([]);
-    const [tags, setTags] = useState<any[]>([]);
-    const [authors, setAuthors] = useState<any[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [tags, setTags] = useState<Tag[]>([]);
+    const [authors, setAuthors] = useState<Author[]>([]);
     const [formData, setFormData] = useState({
         title: initialData?.title || '',
         slug: initialData?.slug || '',
@@ -30,7 +31,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
         coverImage: initialData?.coverImage || '',
         categoryId: initialData?.categoryId || '',
         authorId: initialData?.authorId || '',
-        tagIds: initialData?.tags?.map((t: any) => t.id) || [],
+        tagIds: initialData?.tags?.map((t) => t.id) || [],
         featured: initialData?.featured || false,
         published: initialData?.published || false,
         readTime: initialData?.readTime || '5 min read',
@@ -72,8 +73,8 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
 
         try {
             await onSubmit(formData);
-        } catch (error: any) {
-            alert(error.message || 'Failed to save post');
+        } catch (error: unknown) {
+            alert(error instanceof Error ? error.message : 'Failed to save post');
         } finally {
             setIsLoading(false);
         }

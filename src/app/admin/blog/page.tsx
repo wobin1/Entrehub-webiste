@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Search, Pencil, Trash2, Eye } from 'lucide-react';
 import { format } from 'date-fns';
 import { getAdminBlogPosts, deleteBlogPost } from '@/lib/api/admin';
-import type { BlogPost } from '@/lib/api/client';
+import type { BlogPost } from '@/types/admin';
 
 export default function AdminBlogPage() {
     const router = useRouter();
@@ -20,22 +20,7 @@ export default function AdminBlogPage() {
         loadPosts();
     }, []);
 
-    useEffect(() => {
-        filterPosts();
-    }, [posts, searchQuery, statusFilter]);
-
-    const loadPosts = async () => {
-        try {
-            const data = await getAdminBlogPosts();
-            setPosts(data.posts || []);
-        } catch (error) {
-            console.error('Failed to load posts:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const filterPosts = () => {
+    const filterPosts = useCallback(() => {
         let filtered = posts;
 
         // Filter by status
@@ -55,6 +40,21 @@ export default function AdminBlogPage() {
         }
 
         setFilteredPosts(filtered);
+    }, [posts, searchQuery, statusFilter]);
+
+    useEffect(() => {
+        filterPosts();
+    }, [filterPosts]);
+
+    const loadPosts = async () => {
+        try {
+            const data = await getAdminBlogPosts();
+            setPosts(data.posts || []);
+        } catch (error) {
+            console.error('Failed to load posts:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleDelete = async (slug: string) => {
@@ -68,8 +68,8 @@ export default function AdminBlogPage() {
             await deleteBlogPost(slug);
             setPosts(posts.filter((p) => p.slug !== slug));
             setDeleteConfirm(null);
-        } catch (error: any) {
-            alert(error.message || 'Failed to delete post');
+        } catch (error: unknown) {
+            alert(error instanceof Error ? error.message : 'Failed to delete post');
         }
     };
 
@@ -118,7 +118,7 @@ export default function AdminBlogPage() {
                     {/* Status Filter */}
                     <select
                         value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value as any)}
+                        onChange={(e) => setStatusFilter(e.target.value as 'all' | 'published' | 'draft')}
                         className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <option value="all">All Posts</option>
@@ -175,10 +175,10 @@ export default function AdminBlogPage() {
                                             </div>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-700">{post.author.name}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-700">{post.author?.name || 'Unknown'}</td>
                                     <td className="px-6 py-4">
                                         <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                                            {post.category.name}
+                                            {post.category?.name || 'Uncategorized'}
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">
@@ -218,8 +218,8 @@ export default function AdminBlogPage() {
                                             <button
                                                 onClick={() => handleDelete(post.slug)}
                                                 className={`p-2 rounded-lg transition-colors ${deleteConfirm === post.slug
-                                                        ? 'text-white bg-red-600 hover:bg-red-700'
-                                                        : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
+                                                    ? 'text-white bg-red-600 hover:bg-red-700'
+                                                    : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
                                                     }`}
                                                 title={deleteConfirm === post.slug ? 'Click again to confirm' : 'Delete'}
                                             >

@@ -1,24 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import BlogForm from '@/components/admin/BlogForm';
 import { getAdminBlogPosts, updateBlogPost } from '@/lib/api/admin';
+import { BlogPost } from '@/types/admin';
 
 export default function EditBlogPostPage() {
     const router = useRouter();
     const params = useParams();
-    const [post, setPost] = useState<any>(null);
+    const [post, setPost] = useState<BlogPost | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        loadPost();
-    }, []);
-
-    const loadPost = async () => {
+    const loadPost = useCallback(async () => {
         try {
             const data = await getAdminBlogPosts();
-            const foundPost = data.posts?.find((p: any) => p.id === params.id);
+            const foundPost = data.posts?.find((p: BlogPost) => p.id === params.id);
 
             if (!foundPost) {
                 alert('Post not found');
@@ -34,9 +31,15 @@ export default function EditBlogPostPage() {
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [params.id, router]);
 
-    const handleSubmit = async (data: any) => {
+    useEffect(() => {
+        loadPost();
+    }, [loadPost]);
+
+    const handleSubmit = async (data: Partial<BlogPost>) => {
+        if (!post) return;
+
         try {
             await updateBlogPost(post.slug, data);
             router.push('/admin/blog');

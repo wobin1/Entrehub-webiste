@@ -38,7 +38,7 @@ export function DeleteConfirmationModal({
                         <DialogTitle>{title}</DialogTitle>
                     </div>
                     <DialogDescription>
-                        {description} <span className="font-semibold text-gray-900">"{itemName}"</span>? This action cannot be undone.
+                        {description} <span className="font-semibold text-gray-900">&quot;{itemName}&quot;</span>? This action cannot be undone.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter className="gap-2 sm:gap-0">

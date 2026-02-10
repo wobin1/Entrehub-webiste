@@ -26,7 +26,7 @@ export async function PUT(
         });
 
         return NextResponse.json({ tag });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error updating tag:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
@@ -51,7 +51,7 @@ export async function DELETE(
         });
 
         return NextResponse.json({ message: 'Tag deleted successfully' });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error deleting tag:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }

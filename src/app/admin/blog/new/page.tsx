@@ -3,11 +3,12 @@
 import { useRouter } from 'next/navigation';
 import BlogForm from '@/components/admin/BlogForm';
 import { createBlogPost } from '@/lib/api/admin';
+import { BlogPost } from '@/types/admin';
 
 export default function NewBlogPostPage() {
     const router = useRouter();
 
-    const handleSubmit = async (data: any) => {
+    const handleSubmit = async (data: Partial<BlogPost>) => {
         try {
             await createBlogPost(data);
             router.push('/admin/blog');

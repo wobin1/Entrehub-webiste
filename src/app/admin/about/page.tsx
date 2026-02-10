@@ -37,7 +37,7 @@ export default function AboutAdminPage() {
                 const data = await res.json();
                 setItems(data);
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('Failed to fetch about items');
         } finally {
             setIsLoading(false);
@@ -58,14 +58,14 @@ export default function AboutAdminPage() {
             } else {
                 toast.error(`Failed to update ${item.title}`);
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('An error occurred');
         } finally {
             setIsSaving(null);
         }
     };
 
-    const handleChange = (id: string, field: keyof AboutSection, value: any) => {
+    const handleChange = (id: string, field: keyof AboutSection, value: string) => {
         setItems((prev) =>
             prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
         );
@@ -93,7 +93,7 @@ export default function AboutAdminPage() {
 
             <div className="space-y-6">
                 {items.map((item) => {
-                    const SelectedIcon = (LucideIcons as any)[item.icon || ''] || LucideIcons.HelpCircle;
+                    const SelectedIcon = (LucideIcons as unknown as Record<string, React.ElementType>)[item.icon || ''] || LucideIcons.HelpCircle;
 
                     return (
                         <div key={item.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">

@@ -81,7 +81,7 @@ export function IconPicker({ isOpen, onOpenChange, onSelect, currentIcon }: Icon
                 <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-gray-200">
                     <div className="grid grid-cols-5 gap-3">
                         {filteredIcons.map((name) => {
-                            const IconComponent = (LucideIcons as any)[name];
+                            const IconComponent = (LucideIcons as unknown as Record<string, React.ElementType>)[name];
                             if (!IconComponent) return null;
 
                             const isSelected = currentIcon === name;
@@ -116,7 +116,7 @@ export function IconPicker({ isOpen, onOpenChange, onSelect, currentIcon }: Icon
                     {filteredIcons.length === 0 && (
                         <div className="text-center py-12 text-gray-500">
                             <Search className="w-8 h-8 mx-auto mb-2 opacity-20" />
-                            <p>No icons found matching "{search}"</p>
+                            <p>No icons found matching &quot;{search}&quot;</p>
                         </div>
                     )}
                 </div>

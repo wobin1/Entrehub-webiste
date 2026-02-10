@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -84,7 +84,7 @@ export default function ServiceDialog({
         }
     };
 
-    const SelectedIcon = (LucideIcons as any)[formData.icon] || LucideIcons.HelpCircle;
+    const SelectedIcon = (LucideIcons as unknown as Record<string, React.ElementType>)[formData.icon] || LucideIcons.HelpCircle;
 
     return (
         <>
@@ -153,7 +153,7 @@ export default function ServiceDialog({
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">
-                                "Included" Label
+                                &quot;Included&quot; Label
                             </label>
                             <input
                                 type="text"

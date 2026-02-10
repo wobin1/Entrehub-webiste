@@ -10,8 +10,7 @@ import {
     User,
     Tag as TagIcon,
     Layout,
-    Check,
-    AlertTriangle
+    Check
 } from 'lucide-react';
 import { DeleteConfirmationModal } from '@/components/admin/DeleteConfirmationModal';
 import {
@@ -20,32 +19,35 @@ import {
     getAdminAuthors, createAuthor, updateAuthor, deleteAuthor
 } from '@/lib/api/admin';
 import { toast } from 'sonner';
+import { Category, Tag, Author } from '@/types/admin';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function SettingsClient() {
-    const [categories, setCategories] = useState<any[]>([]);
-    const [tags, setTags] = useState<any[]>([]);
-    const [authors, setAuthors] = useState<any[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [tags, setTags] = useState<Tag[]>([]);
+    const [authors, setAuthors] = useState<Author[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('categories');
 
     // Editing state
     const [editingId, setEditingId] = useState<string | null>(null);
-    const [editData, setEditData] = useState<any>({});
-    const [isAdding, setIsAdding] = useState<string | null>(null); // 'category', 'tag', 'author'
-    const [newData, setNewData] = useState<any>({});
+    const [editData, setEditData] = useState<Partial<Category & Tag & Author>>({});
+    const [isAdding, setIsAdding] = useState<'category' | 'tag' | 'author' | null>(null);
+    const [newData, setNewData] = useState<Partial<Category & Tag & Author>>({});
 
     // Delete confirmation state
     const [deleteModal, setDeleteModal] = useState<{
         isOpen: boolean;
         id: string;
-        type: 'category' | 'tag' | 'author';
+        type: 'category' | 'tag' | 'author' | '';
         name: string;
+        postCount: number;
     }>({
         isOpen: false,
         id: '',
-        type: 'category',
+        type: '',
         name: '',
+        postCount: 0,
     });
 
     useEffect(() => {
@@ -63,14 +65,14 @@ export default function SettingsClient() {
             setCategories(cats.categories || []);
             setTags(tgs.tags || []);
             setAuthors(auths.authors || []);
-        } catch (error: any) {
+        } catch (_error: unknown) {
             toast.error('Failed to load settings data');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const startEdit = (item: any) => {
+    const startEdit = (item: Category | Tag | Author) => {
         setEditingId(item.id);
         setEditData(item);
     };
@@ -94,7 +96,7 @@ export default function SettingsClient() {
             }
             toast.success(`${type} updated successfully`);
             cancelEdit();
-        } catch (error: any) {
+        } catch (_error: unknown) {
             toast.error(`Failed to update ${type}`);
         }
     };
@@ -121,18 +123,19 @@ export default function SettingsClient() {
             toast.success(`${type} created successfully`);
             setIsAdding(null);
             setNewData({});
-        } catch (error: any) {
-            toast.error(error.message || `Failed to create ${type}`);
+        } catch (error: unknown) {
+            toast.error(error instanceof Error ? error.message : `Failed to create ${type}`);
         }
     };
 
-    const handleDeleteClick = (id: string, name: string, type: 'category' | 'tag' | 'author') => {
-        console.log('handleDeleteClick triggered:', { id, name, type });
+    const handleDeleteClick = (id: string, name: string, type: 'category' | 'tag' | 'author', postCount: number = 0) => {
+        console.log('handleDeleteClick triggered:', { id, name, type, postCount });
         setDeleteModal({
             isOpen: true,
             id,
             name,
             type,
+            postCount,
         });
     };
 
@@ -152,15 +155,15 @@ export default function SettingsClient() {
             }
             toast.success(`${type} deleted`);
             console.log(`${type} deleted successfully`);
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error(`Delete failed for ${type}:`, error);
-            toast.error(error.message || `Failed to delete ${type}`);
+            toast.error(error instanceof Error ? error.message : `Failed to delete ${type}`);
         } finally {
             setDeleteModal(prev => ({ ...prev, isOpen: false }));
         }
     };
 
-    const renderTable = (items: any[], type: 'category' | 'tag' | 'author') => {
+    const renderTable = (items: (Category | Tag | Author)[], type: 'category' | 'tag' | 'author') => {
         const isEditing = (id: string) => editingId === id;
 
         return (
@@ -261,12 +264,12 @@ export default function SettingsClient() {
                                         <div className="flex items-center gap-3">
                                             {type === 'author' && (
                                                 <div className="w-8 h-8 rounded-full bg-gray-100 overflow-hidden flex-shrink-0">
-                                                    {item.avatar ? <img src={item.avatar} alt="" className="w-full h-full object-cover" /> : <User className="w-4 h-4 m-2 text-gray-400" />}
+                                                    {(item as Author).avatar ? <img src={(item as Author).avatar!} alt="" className="w-full h-full object-cover" /> : <User className="w-4 h-4 m-2 text-gray-400" />}
                                                 </div>
                                             )}
                                             <div>
                                                 <div className="font-medium text-gray-900">{item.name}</div>
-                                                {type !== 'author' && <div className="text-xs text-gray-400 font-mono">{item.slug}</div>}
+                                                {type !== 'author' && <div className="text-xs text-gray-400 font-mono">{(item as Category | Tag).slug}</div>}
                                             </div>
                                         </div>
                                     )}
@@ -281,7 +284,7 @@ export default function SettingsClient() {
                                                 onChange={e => setEditData({ ...editData, email: e.target.value })}
                                             />
                                         ) : (
-                                            <span className="text-gray-500">{item.email}</span>
+                                            <span className="text-gray-500">{(item as Author).email}</span>
                                         )}
                                     </td>
                                 )}
@@ -309,11 +312,10 @@ export default function SettingsClient() {
                                                 <button
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        handleDeleteClick(item.id, item.name, type);
+                                                        handleDeleteClick(item.id, item.name, type, item._count?.posts || 0);
                                                     }}
-                                                    className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
-                                                    disabled={item._count?.posts > 0}
-                                                    title={item._count?.posts > 0 ? "Cannot delete item with linked posts" : "Delete"}
+                                                    className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors"
+                                                    title="Delete"
                                                 >
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
@@ -413,7 +415,11 @@ export default function SettingsClient() {
                 }}
                 onConfirm={confirmDelete}
                 title={`Delete ${deleteModal.type ? deleteModal.type.charAt(0).toUpperCase() + deleteModal.type.slice(1) : 'Item'}`}
-                description={`Are you sure you want to delete this ${deleteModal.type || 'item'}`}
+                description={
+                    deleteModal.postCount > 0
+                        ? `This ${deleteModal.type} is linked to ${deleteModal.postCount} blog post(s). Deleting it will also delete those posts permanently. Are you sure you want to delete`
+                        : `Are you sure you want to delete this ${deleteModal.type || 'item'}`
+                }
                 itemName={deleteModal.name}
             />
         </div>

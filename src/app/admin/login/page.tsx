@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogIn } from 'lucide-react';
-import Image from 'next/image';
+import Link from 'next/link';
 
 export default function AdminLoginPage() {
     const router = useRouter();
@@ -39,8 +39,8 @@ export default function AdminLoginPage() {
 
             // Redirect to dashboard
             router.push('/admin/dashboard');
-        } catch (error: any) {
-            setError(error.message || 'Invalid credentials');
+        } catch (error: unknown) {
+            setError(error instanceof Error ? error.message : 'Invalid credentials');
         } finally {
             setIsLoading(false);
         }
@@ -141,14 +141,13 @@ export default function AdminLoginPage() {
                     </div>
                 </div>
 
-                {/* Back to site */}
                 <div className="text-center mt-6">
-                    <a
+                    <Link
                         href="/"
                         className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
                     >
                         ← Back to website
-                    </a>
+                    </Link>
                 </div>
             </div>
         </div>

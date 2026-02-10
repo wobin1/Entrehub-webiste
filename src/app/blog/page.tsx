@@ -1,4 +1,4 @@
-import { Calendar, Clock, ArrowRight, Search, Home } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, Home } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getBlogPosts, getCategories } from '@/lib/api/client';
@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function BlogPage() {
   // Fetch blog posts and categories from API
-  const [{ posts, pagination }, { categories }] = await Promise.all([
+  const [{ posts }, { categories }] = await Promise.all([
     getBlogPosts({ limit: 100 }), // Fetch all posts for client-side filtering
     getCategories(),
   ]);

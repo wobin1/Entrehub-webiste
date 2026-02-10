@@ -1,3 +1,5 @@
+import { BlogPost, Category, Tag, Author } from '@/types/admin';
+
 // Admin API client utilities with authentication
 
 export async function getAuthToken(): Promise<string | null> {
@@ -49,13 +51,13 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
 }
 
 // Blog Posts
-export async function getAdminBlogPosts() {
+export async function getAdminBlogPosts(): Promise<{ posts: BlogPost[] }> {
     const response = await fetchWithAuth('/api/blog?limit=1000');
     if (!response.ok) throw new Error('Failed to fetch blog posts');
     return response.json();
 }
 
-export async function createBlogPost(data: any) {
+export async function createBlogPost(data: Partial<BlogPost>): Promise<{ post: BlogPost }> {
     const response = await fetchWithAuth('/api/blog', {
         method: 'POST',
         body: JSON.stringify(data),
@@ -67,7 +69,7 @@ export async function createBlogPost(data: any) {
     return response.json();
 }
 
-export async function updateBlogPost(slug: string, data: any) {
+export async function updateBlogPost(slug: string, data: Partial<BlogPost>): Promise<{ post: BlogPost }> {
     const response = await fetchWithAuth(`/api/blog/${slug}`, {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -79,7 +81,7 @@ export async function updateBlogPost(slug: string, data: any) {
     return response.json();
 }
 
-export async function deleteBlogPost(slug: string) {
+export async function deleteBlogPost(slug: string): Promise<{ message: string }> {
     const response = await fetchWithAuth(`/api/blog/${slug}`, {
         method: 'DELETE',
     });
@@ -91,7 +93,7 @@ export async function deleteBlogPost(slug: string) {
 }
 
 // Categories
-export async function getAdminCategories() {
+export async function getAdminCategories(): Promise<{ categories: Category[] }> {
     const response = await fetch('/api/blog/categories');
 
     if (!response.ok) {
@@ -110,7 +112,7 @@ export async function getAdminCategories() {
     return response.json();
 }
 
-export async function createCategory(data: any) {
+export async function createCategory(data: Partial<Category>): Promise<{ category: Category }> {
     const response = await fetchWithAuth('/api/blog/categories', {
         method: 'POST',
         body: JSON.stringify(data),
@@ -122,7 +124,7 @@ export async function createCategory(data: any) {
     return response.json();
 }
 
-export async function updateCategory(id: string, data: any) {
+export async function updateCategory(id: string, data: Partial<Category>): Promise<{ category: Category }> {
     const response = await fetchWithAuth(`/api/blog/categories/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -134,7 +136,7 @@ export async function updateCategory(id: string, data: any) {
     return response.json();
 }
 
-export async function deleteCategory(id: string) {
+export async function deleteCategory(id: string): Promise<{ message: string }> {
     const response = await fetchWithAuth(`/api/blog/categories/${id}`, {
         method: 'DELETE',
     });
@@ -146,7 +148,7 @@ export async function deleteCategory(id: string) {
 }
 
 // Tags
-export async function getAdminTags() {
+export async function getAdminTags(): Promise<{ tags: Tag[] }> {
     const response = await fetch('/api/blog/tags');
 
     if (!response.ok) {
@@ -165,7 +167,7 @@ export async function getAdminTags() {
     return response.json();
 }
 
-export async function createTag(data: any) {
+export async function createTag(data: Partial<Tag>): Promise<{ tag: Tag }> {
     const response = await fetchWithAuth('/api/blog/tags', {
         method: 'POST',
         body: JSON.stringify(data),
@@ -177,7 +179,7 @@ export async function createTag(data: any) {
     return response.json();
 }
 
-export async function updateTag(id: string, data: any) {
+export async function updateTag(id: string, data: Partial<Tag>): Promise<{ tag: Tag }> {
     const response = await fetchWithAuth(`/api/blog/tags/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -189,7 +191,7 @@ export async function updateTag(id: string, data: any) {
     return response.json();
 }
 
-export async function deleteTag(id: string) {
+export async function deleteTag(id: string): Promise<{ message: string }> {
     const response = await fetchWithAuth(`/api/blog/tags/${id}`, {
         method: 'DELETE',
     });
@@ -201,7 +203,7 @@ export async function deleteTag(id: string) {
 }
 
 // Authors
-export async function getAdminAuthors() {
+export async function getAdminAuthors(): Promise<{ authors: Author[] }> {
     const response = await fetch('/api/blog/authors');
 
     if (!response.ok) {
@@ -220,7 +222,7 @@ export async function getAdminAuthors() {
     return response.json();
 }
 
-export async function createAuthor(data: any) {
+export async function createAuthor(data: Partial<Author>): Promise<{ author: Author }> {
     const response = await fetchWithAuth('/api/blog/authors', {
         method: 'POST',
         body: JSON.stringify(data),
@@ -232,7 +234,7 @@ export async function createAuthor(data: any) {
     return response.json();
 }
 
-export async function updateAuthor(id: string, data: any) {
+export async function updateAuthor(id: string, data: Partial<Author>): Promise<{ author: Author }> {
     const response = await fetchWithAuth(`/api/blog/authors/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
@@ -244,7 +246,7 @@ export async function updateAuthor(id: string, data: any) {
     return response.json();
 }
 
-export async function deleteAuthor(id: string) {
+export async function deleteAuthor(id: string): Promise<{ message: string }> {
     const response = await fetchWithAuth(`/api/blog/authors/${id}`, {
         method: 'DELETE',
     });

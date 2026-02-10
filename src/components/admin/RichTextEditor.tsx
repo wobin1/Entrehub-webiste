@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
@@ -30,7 +30,7 @@ interface RichTextEditorProps {
     placeholder?: string;
 }
 
-const Toolbar = ({ editor }: { editor: any }) => {
+const Toolbar = ({ editor }: { editor: Editor | null }) => {
     if (!editor) return null;
 
     const addLink = () => {

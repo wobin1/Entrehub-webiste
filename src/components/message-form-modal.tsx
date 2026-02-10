@@ -39,9 +39,9 @@ export default function MessageFormModal({ isOpen, onClose }: MessageFormModalPr
         onClose();
         setSubmitStatus('idle');
       }, 2000);
-    } catch (error: any) {
+    } catch (error: unknown) {
       setSubmitStatus('error');
-      setErrorMessage(error.message || 'Failed to send message. Please try again.');
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -77,10 +77,10 @@ export default function MessageFormModal({ isOpen, onClose }: MessageFormModalPr
           <div className="relative h-64 md:h-auto bg-gradient-to-br from-blue-600 to-orange-500 p-8 flex flex-col justify-center">
             <div className="relative z-10">
               <h3 className="text-3xl font-bold text-white mb-4">
-                Let's Connect
+                Let&apos;s Connect
               </h3>
               <p className="text-blue-50 mb-6">
-                Have a question or want to work together? Drop us a message and we'll get back to you as soon as possible.
+                Have a question or want to work together? Drop us a message and we&apos;ll get back to you as soon as possible.
               </p>
               <div className="space-y-3 text-blue-50">
                 <p className="flex items-center gap-2">
@@ -115,7 +115,7 @@ export default function MessageFormModal({ isOpen, onClose }: MessageFormModalPr
             {submitStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <p className="text-green-800 font-medium">✓ Message sent successfully!</p>
-                <p className="text-green-600 text-sm">We'll get back to you soon.</p>
+                <p className="text-green-600 text-sm">We&apos;ll get back to you soon.</p>
               </div>
             )}
 

@@ -26,7 +26,7 @@ export async function PUT(
         });
 
         return NextResponse.json({ author });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error updating author:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
@@ -51,7 +51,7 @@ export async function DELETE(
         });
 
         return NextResponse.json({ message: 'Author deleted successfully' });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error deleting author:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }

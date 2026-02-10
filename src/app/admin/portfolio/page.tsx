@@ -45,7 +45,7 @@ export default function PortfolioAdminPage() {
                 const data = await res.json();
                 setProjects(data);
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('Failed to fetch portfolio projects');
         } finally {
             setIsLoading(false);
@@ -75,7 +75,7 @@ export default function PortfolioAdminPage() {
             } else {
                 toast.error('Failed to delete project');
             }
-        } catch (error) {
+        } catch (_error) {
             toast.error('An error occurred');
         }
     };

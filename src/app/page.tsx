@@ -1,6 +1,5 @@
 import Navigation from '@/components/navigation';
 import HeroSection from '@/components/hero-section';
-import VideoSection from '@/components/video-section';
 import AboutSection from '@/components/about-section';
 import ServicesSection from '@/components/services-section';
 import WorkSection from '@/components/work-section';

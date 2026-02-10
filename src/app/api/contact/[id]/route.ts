@@ -35,7 +35,7 @@ export async function GET(
         }
 
         return NextResponse.json({ message });
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error fetching contact message:', error);
         return NextResponse.json(
             { error: 'Internal server error' },
@@ -78,17 +78,17 @@ export async function PUT(
         });
 
         return NextResponse.json({ message });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error updating contact message:', error);
 
-        if (error.name === 'ZodError') {
+        if (error instanceof Error && error.name === 'ZodError') {
             return NextResponse.json(
-                { error: 'Validation error', details: error.errors },
+                { error: 'Validation error', details: (error as unknown as { errors: unknown }).errors },
                 { status: 400 }
             );
         }
 
-        if (error.code === 'P2025') {
+        if (error !== null && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
             return NextResponse.json(
                 { error: 'Message not found' },
                 { status: 404 }
@@ -127,10 +127,10 @@ export async function DELETE(
         });
 
         return NextResponse.json({ message: 'Contact message deleted successfully' });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error deleting contact message:', error);
 
-        if (error.code === 'P2025') {
+        if (error !== null && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
             return NextResponse.json(
                 { error: 'Message not found' },
                 { status: 404 }

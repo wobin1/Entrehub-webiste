@@ -26,7 +26,7 @@ export async function PUT(
         });
 
         return NextResponse.json({ category });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error updating category:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
@@ -51,7 +51,7 @@ export async function DELETE(
         });
 
         return NextResponse.json({ message: 'Category deleted successfully' });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error deleting category:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }

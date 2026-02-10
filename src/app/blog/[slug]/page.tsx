@@ -8,20 +8,20 @@ import { notFound } from 'next/navigation';
 export const dynamic = 'force-dynamic';
 
 interface BlogPostPageProps {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
-    const { slug } = params;
+    const { slug } = await params;
 
     // Fetch the blog post
     let post;
     try {
         const data = await getBlogPost(slug);
         post = data.post;
-    } catch (error) {
+    } catch (_error) {
         notFound();
     }
 

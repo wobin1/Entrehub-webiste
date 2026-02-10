@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -67,13 +67,7 @@ export default function PortfolioDialog({
         }
     }, [project]);
 
-    useEffect(() => {
-        if (isOpen) {
-            fetchCategories();
-        }
-    }, [isOpen]);
-
-    const fetchCategories = async () => {
+    const fetchCategories = useCallback(async () => {
         setIsLoadingCategories(true);
         try {
             const res = await fetch('/api/blog/categories');
@@ -90,7 +84,13 @@ export default function PortfolioDialog({
         } finally {
             setIsLoadingCategories(false);
         }
-    };
+    }, [project, formData.category]);
+
+    useEffect(() => {
+        if (isOpen) {
+            fetchCategories();
+        }
+    }, [isOpen, fetchCategories]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
