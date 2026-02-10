@@ -125,7 +125,9 @@ export async function POST(request: NextRequest) {
                 coverImage: validatedData.coverImage,
                 featured: validatedData.featured,
                 published: validatedData.published,
-                publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : null,
+                publishedAt: validatedData.publishedAt
+                    ? new Date(validatedData.publishedAt)
+                    : (validatedData.published ? new Date() : null),
                 readTime: validatedData.readTime,
                 authorId: validatedData.authorId,
                 categoryId: validatedData.categoryId,

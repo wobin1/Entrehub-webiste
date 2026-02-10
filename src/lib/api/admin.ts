@@ -115,7 +115,10 @@ export async function createCategory(data: any) {
         method: 'POST',
         body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to create category');
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create category');
+    }
     return response.json();
 }
 
@@ -124,7 +127,10 @@ export async function updateCategory(id: string, data: any) {
         method: 'PUT',
         body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to update category');
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update category');
+    }
     return response.json();
 }
 
@@ -132,7 +138,10 @@ export async function deleteCategory(id: string) {
     const response = await fetchWithAuth(`/api/blog/categories/${id}`, {
         method: 'DELETE',
     });
-    if (!response.ok) throw new Error('Failed to delete category');
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete category');
+    }
     return response.json();
 }
 
@@ -161,7 +170,10 @@ export async function createTag(data: any) {
         method: 'POST',
         body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to create tag');
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create tag');
+    }
     return response.json();
 }
 
@@ -170,7 +182,10 @@ export async function updateTag(id: string, data: any) {
         method: 'PUT',
         body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to update tag');
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update tag');
+    }
     return response.json();
 }
 
@@ -178,7 +193,10 @@ export async function deleteTag(id: string) {
     const response = await fetchWithAuth(`/api/blog/tags/${id}`, {
         method: 'DELETE',
     });
-    if (!response.ok) throw new Error('Failed to delete tag');
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete tag');
+    }
     return response.json();
 }
 
@@ -207,7 +225,10 @@ export async function createAuthor(data: any) {
         method: 'POST',
         body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to create author');
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to create author');
+    }
     return response.json();
 }
 
@@ -216,7 +237,10 @@ export async function updateAuthor(id: string, data: any) {
         method: 'PUT',
         body: JSON.stringify(data),
     });
-    if (!response.ok) throw new Error('Failed to update author');
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to update author');
+    }
     return response.json();
 }
 
@@ -224,6 +248,9 @@ export async function deleteAuthor(id: string) {
     const response = await fetchWithAuth(`/api/blog/authors/${id}`, {
         method: 'DELETE',
     });
-    if (!response.ok) throw new Error('Failed to delete author');
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete author');
+    }
     return response.json();
 }

@@ -15,36 +15,36 @@ export default function HeroSection() {
           <source src="/videos/digi-3.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        
+
         {/* Professional Video Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-blue-900/70 to-slate-800/85"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-blue-800/40"></div>
       </div>
-      
+
       {/* Fallback Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-white z-[-1]"></div>
-      
+
       <div className="relative max-w-6xl mx-auto px-6 lg:px-8 text-center">
         {/* Main Heading */}
         <div className="mb-12">
           <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-8">
             <span className="text-orange-400 text-sm font-semibold tracking-wide">● DIGITAL EXCELLENCE</span>
           </div>
-          
+
           <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 tracking-tight leading-none">
             <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
               ENTREHUB
             </span>
           </h1>
-          
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-medium text-slate-300 mb-8 tracking-[0.2em] uppercase">
+
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-medium text-gray-300 mb-8 tracking-[0.2em] uppercase">
             Digital Creative Agency
           </h2>
         </div>
 
         {/* Description */}
-        <p className="text-xl sm:text-2xl text-slate-200 mb-16 max-w-4xl mx-auto leading-relaxed font-light">
-          We transform businesses through strategic digital marketing, innovative design, 
+        <p className="text-xl sm:text-2xl text-gray-200 mb-16 max-w-4xl mx-auto leading-relaxed font-light">
+          We transform businesses through strategic digital marketing, innovative design,
           and data-driven solutions that deliver <span className="text-orange-400 font-medium">measurable results</span>.
         </p>
 
@@ -63,7 +63,7 @@ export default function HeroSection() {
             </span>
           </button>
         </div>
-        
+
         {/* Stats */}
         <div className="grid grid-cols-3 gap-8 mt-20 max-w-2xl mx-auto">
           <div className="text-center">
@@ -85,7 +85,7 @@ export default function HeroSection() {
       <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-orange-400/40 rounded-full animate-pulse"></div>
       <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-blue-400/30 rounded-full"></div>
       <div className="absolute bottom-1/4 right-1/4 w-4 h-4 bg-white/20 rounded-full animate-pulse"></div>
-      
+
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 text-sm font-medium">
         <div className="flex flex-col items-center space-y-2">

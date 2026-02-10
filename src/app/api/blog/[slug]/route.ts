@@ -87,6 +87,29 @@ export async function PUT(
         // Validate input
         const validatedData = updateBlogPostSchema.parse(body);
 
+        // First, get the current state of the post
+        const currentPost = await prisma.blogPost.findUnique({
+            where: { slug },
+            select: { publishedAt: true }
+        });
+
+        if (!currentPost) {
+            return NextResponse.json(
+                { error: 'Blog post not found' },
+                { status: 404 }
+            );
+        }
+
+        // Determine publishedAt date
+        let publishedAt = validatedData.publishedAt !== undefined
+            ? (validatedData.publishedAt ? new Date(validatedData.publishedAt) : null)
+            : undefined;
+
+        // If toggling to published and no date exists, set to now
+        if (validatedData.published === true && currentPost.publishedAt === null && publishedAt === undefined) {
+            publishedAt = new Date();
+        }
+
         // Update blog post
         const post = await prisma.blogPost.update({
             where: { slug },
@@ -98,9 +121,7 @@ export async function PUT(
                 ...(validatedData.coverImage && { coverImage: validatedData.coverImage }),
                 ...(validatedData.featured !== undefined && { featured: validatedData.featured }),
                 ...(validatedData.published !== undefined && { published: validatedData.published }),
-                ...(validatedData.publishedAt !== undefined && {
-                    publishedAt: validatedData.publishedAt ? new Date(validatedData.publishedAt) : null,
-                }),
+                ...(publishedAt !== undefined && { publishedAt }),
                 ...(validatedData.readTime && { readTime: validatedData.readTime }),
                 ...(validatedData.authorId && { authorId: validatedData.authorId }),
                 ...(validatedData.categoryId && { categoryId: validatedData.categoryId }),

@@ -10,8 +10,10 @@ import {
     User,
     Tag as TagIcon,
     Layout,
-    Check
+    Check,
+    AlertTriangle
 } from 'lucide-react';
+import { DeleteConfirmationModal } from '@/components/admin/DeleteConfirmationModal';
 import {
     getAdminCategories, createCategory, updateCategory, deleteCategory,
     getAdminTags, createTag, updateTag, deleteTag,
@@ -25,12 +27,26 @@ export default function SettingsClient() {
     const [tags, setTags] = useState<any[]>([]);
     const [authors, setAuthors] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('categories');
 
     // Editing state
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editData, setEditData] = useState<any>({});
     const [isAdding, setIsAdding] = useState<string | null>(null); // 'category', 'tag', 'author'
     const [newData, setNewData] = useState<any>({});
+
+    // Delete confirmation state
+    const [deleteModal, setDeleteModal] = useState<{
+        isOpen: boolean;
+        id: string;
+        type: 'category' | 'tag' | 'author';
+        name: string;
+    }>({
+        isOpen: false,
+        id: '',
+        type: 'category',
+        name: '',
+    });
 
     useEffect(() => {
         loadAll();
@@ -85,26 +101,42 @@ export default function SettingsClient() {
 
     const handleCreate = async (type: 'category' | 'tag' | 'author') => {
         try {
+            // Clean data: remove empty strings for optional fields
+            const dataToSubmit = { ...newData };
+            if (type === 'author') {
+                if (!dataToSubmit.avatar) delete dataToSubmit.avatar;
+                if (!dataToSubmit.bio) delete dataToSubmit.bio;
+            }
+
             if (type === 'category') {
-                const res = await createCategory(newData);
+                const res = await createCategory(dataToSubmit);
                 setCategories(prev => [...prev, res.category]);
             } else if (type === 'tag') {
-                const res = await createTag(newData);
+                const res = await createTag(dataToSubmit);
                 setTags(prev => [...prev, res.tag]);
             } else if (type === 'author') {
-                const res = await createAuthor(newData);
+                const res = await createAuthor(dataToSubmit);
                 setAuthors(prev => [...prev, res.author]);
             }
             toast.success(`${type} created successfully`);
             setIsAdding(null);
             setNewData({});
         } catch (error: any) {
-            toast.error(`Failed to create ${type}`);
+            toast.error(error.message || `Failed to create ${type}`);
         }
     };
 
-    const handleDelete = async (id: string, type: 'category' | 'tag' | 'author') => {
-        if (!confirm(`Are you sure you want to delete this ${type}?`)) return;
+    const handleDeleteClick = (id: string, name: string, type: 'category' | 'tag' | 'author') => {
+        setDeleteModal({
+            isOpen: true,
+            id,
+            name,
+            type,
+        });
+    };
+
+    const confirmDelete = async () => {
+        const { id, type } = deleteModal;
         try {
             if (type === 'category') {
                 await deleteCategory(id);
@@ -118,7 +150,7 @@ export default function SettingsClient() {
             }
             toast.success(`${type} deleted`);
         } catch (error: any) {
-            toast.error(`Failed to delete ${type}`);
+            toast.error(error.message || `Failed to delete ${type}`);
         }
     };
 
@@ -269,7 +301,7 @@ export default function SettingsClient() {
                                                     <Pencil className="w-4 h-4" />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDelete(item.id, type)}
+                                                    onClick={() => handleDeleteClick(item.id, item.name, type)}
                                                     className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors"
                                                     disabled={item._count?.posts > 0}
                                                     title={item._count?.posts > 0 ? "Cannot delete item with linked posts" : "Delete"}
@@ -299,7 +331,10 @@ export default function SettingsClient() {
 
     return (
         <div className="space-y-8 animate-in fade-in duration-500">
-            <Tabs defaultValue="categories" className="w-full">
+            <Tabs value={activeTab} onValueChange={(val) => {
+                console.log('Tab changed to:', val);
+                setActiveTab(val);
+            }} className="w-full">
                 <div className="flex justify-between items-center mb-6">
                     <TabsList className="bg-white border border-gray-100 p-1">
                         <TabsTrigger value="categories" className="flex items-center gap-2">
@@ -318,9 +353,19 @@ export default function SettingsClient() {
 
                     <button
                         onClick={() => {
-                            const type = document.querySelector('[data-state="active"][role="tab"]')?.getAttribute('value');
-                            setIsAdding(type as string);
-                            setNewData({});
+                            console.log('Add New button clicked. activeTab:', activeTab);
+                            // Map plural to singular
+                            const type = activeTab === 'categories' ? 'category' :
+                                activeTab === 'tags' ? 'tag' :
+                                    activeTab === 'authors' ? 'author' : null;
+
+                            console.log('Mapped type:', type);
+                            if (type) {
+                                setIsAdding(type);
+                                setNewData({});
+                            } else {
+                                console.warn('Could not determine entity type for activeTab:', activeTab);
+                            }
                         }}
                         className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-orange-500 text-white font-semibold rounded-lg hover:shadow-lg transition-all"
                     >
@@ -350,6 +395,15 @@ export default function SettingsClient() {
                     {renderTable(authors, 'author')}
                 </TabsContent>
             </Tabs>
+
+            <DeleteConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onOpenChange={(open) => setDeleteModal(prev => ({ ...prev, isOpen: open }))}
+                onConfirm={confirmDelete}
+                title={`Delete ${deleteModal.type.charAt(0).toUpperCase() + deleteModal.type.slice(1)}`}
+                description={`Are you sure you want to delete the ${deleteModal.type}`}
+                itemName={deleteModal.name}
+            />
         </div>
     );
 }

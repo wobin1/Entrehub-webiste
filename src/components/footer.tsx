@@ -33,20 +33,20 @@ export default function Footer() {
           <div className="lg:col-span-1">
             <div className="flex items-center mb-6">
               <div className="w-10 h-10 rounded-xl overflow-hidden mr-4 shadow-lg border-2 border-blue-300/30">
-                <Image 
-                  src="/images/logo.jpeg" 
-                  alt="ENTREHUB Logo" 
-                  width={40} 
-                  height={40} 
+                <Image
+                  src="/images/logo.jpeg"
+                  alt="ENTREHUB Logo"
+                  width={40}
+                  height={40}
                   className="object-cover w-full h-full"
                 />
               </div>
-              <span className="text-xl font-bold">ENTREHUB</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-orange-400 bg-clip-text text-transparent">ENTREHUB</span>
             </div>
-            
+
             <p className="text-blue-100 leading-relaxed mb-6">
-              Specializes in innovative digital marketing strategies, blending 
-              creativity and data-driven insights to elevate your brand&apos;s online 
+              Specializes in innovative digital marketing strategies, blending
+              creativity and data-driven insights to elevate your brand&apos;s online
               presence and drive measurable growth.
             </p>
           </div>
@@ -57,7 +57,7 @@ export default function Footer() {
             <ul className="space-y-3">
               {menuItems.map((item, index) => (
                 <li key={index}>
-                  <a 
+                  <a
                     href={item.href}
                     className="text-blue-100 hover:text-white transition-colors duration-200"
                   >
@@ -74,7 +74,7 @@ export default function Footer() {
             <ul className="space-y-3">
               {services.map((service, index) => (
                 <li key={index}>
-                  <a 
+                  <a
                     href={service.href}
                     className="text-blue-100 hover:text-white transition-colors duration-200"
                   >
@@ -91,7 +91,7 @@ export default function Footer() {
             <ul className="space-y-3">
               {socialMedia.map((social, index) => (
                 <li key={index}>
-                  <a 
+                  <a
                     href={social.href}
                     className="text-blue-100 hover:text-white transition-colors duration-200"
                   >
@@ -108,16 +108,16 @@ export default function Footer() {
           <p className="text-blue-200 text-sm mb-4 md:mb-0">
             © 2025 ENTREHUB. All Rights Reserved.
           </p>
-          
+
           <div className="flex space-x-6">
-            <a 
-              href="#" 
+            <a
+              href="#"
               className="text-blue-200 hover:text-white text-sm transition-colors duration-200"
             >
               Terms & Conditions
             </a>
-            <a 
-              href="#" 
+            <a
+              href="#"
               className="text-blue-200 hover:text-white text-sm transition-colors duration-200"
             >
               Privacy Policy

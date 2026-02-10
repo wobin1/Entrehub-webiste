@@ -31,6 +31,6 @@ export const tagSchema = z.object({
 export const authorSchema = z.object({
     name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
     email: z.string().email('Invalid email address'),
-    avatar: z.string().url('Avatar must be a valid URL').optional(),
-    bio: z.string().max(500, 'Bio is too long').optional(),
+    avatar: z.string().url('Avatar must be a valid URL').optional().or(z.literal('')).nullable(),
+    bio: z.string().max(500, 'Bio is too long').optional().or(z.literal('')).nullable(),
 });
