@@ -6,13 +6,14 @@ import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
 // GET /api/blog/[slug] - Get a single blog post by slug
 export async function GET(
     request: NextRequest,
-    { params }: { params: { slug: string } }
+    { params }: { params: Promise<{ slug: string }> }
 ) {
     try {
-        const { slug } = params;
+        const { slug } = await params;
 
         const post = await prisma.blogPost.findUnique({
             where: { slug },
+            // ... (rest of search/replace is long, I'll be careful with chunks)
             include: {
                 author: {
                     select: {
@@ -65,9 +66,10 @@ export async function GET(
 // PUT /api/blog/[slug] - Update a blog post (admin only)
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { slug: string } }
+    { params }: { params: Promise<{ slug: string }> }
 ) {
     try {
+        const { slug } = await params;
         // Verify admin token
         const authHeader = request.headers.get('authorization');
         const token = extractTokenFromHeader(authHeader);
@@ -81,7 +83,6 @@ export async function PUT(
             return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }
 
-        const { slug } = params;
         const body = await request.json();
 
         // Validate input
@@ -166,9 +167,10 @@ export async function PUT(
 // DELETE /api/blog/[slug] - Delete a blog post (admin only)
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { slug: string } }
+    { params }: { params: Promise<{ slug: string }> }
 ) {
     try {
+        const { slug } = await params;
         // Verify admin token
         const authHeader = request.headers.get('authorization');
         const token = extractTokenFromHeader(authHeader);
@@ -181,8 +183,6 @@ export async function DELETE(
         if (!payload) {
             return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }
-
-        const { slug } = params;
 
         await prisma.blogPost.delete({
             where: { slug },

@@ -6,9 +6,10 @@ import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
 // GET /api/contact/[id] - Get a single contact message (admin only)
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         // Verify admin token
         const authHeader = request.headers.get('authorization');
         const token = extractTokenFromHeader(authHeader);
@@ -21,8 +22,6 @@ export async function GET(
         if (!payload) {
             return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }
-
-        const { id } = params;
 
         const message = await prisma.contactMessage.findUnique({
             where: { id },
@@ -48,9 +47,10 @@ export async function GET(
 // PUT /api/contact/[id] - Update contact message status/notes (admin only)
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         // Verify admin token
         const authHeader = request.headers.get('authorization');
         const token = extractTokenFromHeader(authHeader);
@@ -64,7 +64,6 @@ export async function PUT(
             return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }
 
-        const { id } = params;
         const body = await request.json();
 
         // Validate input
@@ -106,9 +105,10 @@ export async function PUT(
 // DELETE /api/contact/[id] - Delete a contact message (admin only)
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         // Verify admin token
         const authHeader = request.headers.get('authorization');
         const token = extractTokenFromHeader(authHeader);
@@ -121,8 +121,6 @@ export async function DELETE(
         if (!payload) {
             return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }
-
-        const { id } = params;
 
         await prisma.contactMessage.delete({
             where: { id },

@@ -8,11 +8,13 @@ import {
     CheckCircle,
     RotateCcw,
     Archive,
-    Clock
+    Clock,
+    MessageSquare
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fetchWithAuth } from '@/lib/api/admin';
 import { toast } from 'sonner';
+import { DeleteConfirmationModal } from '@/components/admin/DeleteConfirmationModal';
 
 interface Message {
     id: string;
@@ -31,6 +33,17 @@ export default function MessagesClient() {
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('ALL');
     const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+
+    // Delete modal state
+    const [deleteModal, setDeleteModal] = useState<{
+        isOpen: boolean;
+        messageId: string;
+        senderName: string;
+    }>({
+        isOpen: false,
+        messageId: '',
+        senderName: '',
+    });
 
     useEffect(() => {
         loadMessages();
@@ -68,17 +81,25 @@ export default function MessagesClient() {
         }
     };
 
-    const deleteMessage = async (id: string) => {
-        if (!confirm('Are you sure you want to delete this message?')) return;
+    const handleDeleteClick = (message: Message) => {
+        setDeleteModal({
+            isOpen: true,
+            messageId: message.id,
+            senderName: message.name,
+        });
+    };
+
+    const confirmDelete = async () => {
+        const { messageId } = deleteModal;
         try {
-            const res = await fetchWithAuth(`/api/contact/${id}`, {
+            const res = await fetchWithAuth(`/api/contact/${messageId}`, {
                 method: 'DELETE',
             });
             if (!res.ok) throw new Error('Failed to delete message');
 
             toast.success('Message deleted');
-            setMessages(prev => prev.filter(m => m.id !== id));
-            if (selectedMessage?.id === id) setSelectedMessage(null);
+            setMessages(prev => prev.filter(m => m.id !== messageId));
+            if (selectedMessage?.id === messageId) setSelectedMessage(null);
         } catch (error: any) {
             toast.error(error.message || 'Failed to delete message');
         }
@@ -124,8 +145,8 @@ export default function MessagesClient() {
                             key={status}
                             onClick={() => setStatusFilter(status)}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${statusFilter === status
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                                 }`}
                         >
                             {status.charAt(0) + status.slice(1).toLowerCase()}
@@ -208,7 +229,7 @@ export default function MessagesClient() {
                                         {selectedMessage.status === 'ARCHIVED' ? <RotateCcw className="w-5 h-5" /> : <Archive className="w-5 h-5" />}
                                     </button>
                                     <button
-                                        onClick={() => deleteMessage(selectedMessage.id)}
+                                        onClick={() => handleDeleteClick(selectedMessage)}
                                         className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-all"
                                         title="Delete"
                                     >
@@ -259,8 +280,15 @@ export default function MessagesClient() {
                     )}
                 </div>
             </div>
+
+            <DeleteConfirmationModal
+                isOpen={deleteModal.isOpen}
+                onOpenChange={(open) => setDeleteModal(prev => ({ ...prev, isOpen: open }))}
+                onConfirm={confirmDelete}
+                title="Delete Message"
+                description="Are you sure you want to delete the message from"
+                itemName={deleteModal.senderName}
+            />
         </div>
     );
 }
-
-import { MessageSquare } from 'lucide-react';

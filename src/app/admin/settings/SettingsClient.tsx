@@ -127,6 +127,7 @@ export default function SettingsClient() {
     };
 
     const handleDeleteClick = (id: string, name: string, type: 'category' | 'tag' | 'author') => {
+        console.log('handleDeleteClick triggered:', { id, name, type });
         setDeleteModal({
             isOpen: true,
             id,
@@ -137,6 +138,7 @@ export default function SettingsClient() {
 
     const confirmDelete = async () => {
         const { id, type } = deleteModal;
+        console.log(`Attempting to delete ${type} with id: ${id}`);
         try {
             if (type === 'category') {
                 await deleteCategory(id);
@@ -149,8 +151,12 @@ export default function SettingsClient() {
                 setAuthors(prev => prev.filter(a => a.id !== id));
             }
             toast.success(`${type} deleted`);
+            console.log(`${type} deleted successfully`);
         } catch (error: any) {
+            console.error(`Delete failed for ${type}:`, error);
             toast.error(error.message || `Failed to delete ${type}`);
+        } finally {
+            setDeleteModal(prev => ({ ...prev, isOpen: false }));
         }
     };
 
@@ -232,7 +238,7 @@ export default function SettingsClient() {
                         )}
 
                         {items.map(item => (
-                            <tr key={item.id} className="hover:bg-gray-50/50 transition-colors">
+                            <tr key={item.id} className="group hover:bg-gray-50/50 transition-colors">
                                 <td className="px-6 py-4">
                                     {isEditing(item.id) ? (
                                         <div className="space-y-2">
@@ -285,7 +291,7 @@ export default function SettingsClient() {
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 text-right">
-                                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity" style={{ opacity: 1 }}>
+                                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         {isEditing(item.id) ? (
                                             <>
                                                 <button onClick={() => handleSaveEdit(type)} className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
@@ -301,8 +307,11 @@ export default function SettingsClient() {
                                                     <Pencil className="w-4 h-4" />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDeleteClick(item.id, item.name, type)}
-                                                    className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        handleDeleteClick(item.id, item.name, type);
+                                                    }}
+                                                    className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors disabled:opacity-20 disabled:cursor-not-allowed"
                                                     disabled={item._count?.posts > 0}
                                                     title={item._count?.posts > 0 ? "Cannot delete item with linked posts" : "Delete"}
                                                 >
@@ -398,10 +407,13 @@ export default function SettingsClient() {
 
             <DeleteConfirmationModal
                 isOpen={deleteModal.isOpen}
-                onOpenChange={(open) => setDeleteModal(prev => ({ ...prev, isOpen: open }))}
+                onOpenChange={(open) => {
+                    console.log('Modal onOpenChange:', open);
+                    setDeleteModal(prev => ({ ...prev, isOpen: open }));
+                }}
                 onConfirm={confirmDelete}
-                title={`Delete ${deleteModal.type.charAt(0).toUpperCase() + deleteModal.type.slice(1)}`}
-                description={`Are you sure you want to delete the ${deleteModal.type}`}
+                title={`Delete ${deleteModal.type ? deleteModal.type.charAt(0).toUpperCase() + deleteModal.type.slice(1) : 'Item'}`}
+                description={`Are you sure you want to delete this ${deleteModal.type || 'item'}`}
                 itemName={deleteModal.name}
             />
         </div>

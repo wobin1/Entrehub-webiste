@@ -1,33 +1,43 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
+interface Project {
+  id: string;
+  category: string;
+  title: string;
+  description: string;
+  metric: string;
+  metricLabel: string;
+  image: string;
+}
+
 export default function WorkSection() {
-  const projects = [
-    {
-      category: 'SEO Optimization',
-      title: "TechCorp's Traffic Soars With SEO Optimization",
-      description: 'Boosted organic traffic by 50% for TechCorp through carefully targeted keyword strategies and comprehensive on-page optimization, driving significant growth in search engine visibility.',
-      metric: '+50%',
-      metricLabel: 'Organic traffic',
-      image: '/images/img-1.jpg'
-    },
-    {
-      category: 'Social Media Management',
-      title: "FashionWave's Engagement Soars With Creative Campaigns",
-      description: 'Increased follower engagement for FashionWave by 75% through the implementation of creative content strategies and interactive social media campaigns, significantly enhancing brand interaction and customer connection across all platforms.',
-      metric: '+75%',
-      metricLabel: 'Follower engagement',
-      image: '/images/img-2.jpg'
-    },
-    {
-      category: 'Brand Strategy',
-      title: "UrbanNest's Brand Revamp Boosts Recognition",
-      description: 'Revamped UrbanNest\'s brand identity, leading to a 50% increase in customer recognition and trust. The refreshed image strengthened market presence and deepened connections with the target audience.',
-      metric: '+50%',
-      image: '/images/img-3.jpg'
-    }
-  ];
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPortfolio = async () => {
+      try {
+        const res = await fetch('/api/portfolio');
+        if (res.ok) {
+          const data = await res.json();
+          setProjects(data);
+        }
+      } catch (error) {
+        console.error('Error fetching portfolio:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPortfolio();
+  }, []);
+
+  if (isLoading || projects.length === 0) {
+    return null;
+  }
 
   return (
     <section id="work" className="py-24 bg-gradient-to-br from-white via-slate-50/30 to-blue-50/20">
@@ -59,7 +69,7 @@ export default function WorkSection() {
         <div className="space-y-20">
           {projects.map((project, index) => (
             <div
-              key={index}
+              key={project.id}
               className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''
                 }`}
             >

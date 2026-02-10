@@ -1,47 +1,43 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
+
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  image: string;
+  order: number;
+}
 
 export default function TeamSection() {
   const [teamCurrentIndex, setTeamCurrentIndex] = useState(0);
   const [testimonialCurrentIndex, setTestimonialCurrentIndex] = useState(0);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const teamScrollRef = useRef<HTMLDivElement>(null);
   const testimonialScrollRef = useRef<HTMLDivElement>(null);
 
-  const teamMembers = [
-    {
-      name: 'GABRIEL ADINGA',
-      role: 'Manager',
-      image: '/team/team-1.jpeg',
-      fallback: 'bg-gradient-to-br from-blue-300 to-blue-400'
-    },
-    {
-      name: 'GENESIS THOMAS',
-      role: 'Creative Designer',
-      image: '/team/team-2.jpeg',
-      fallback: 'bg-gradient-to-br from-blue-400 to-blue-500'
-    },
-    {
-      name: 'OBI EMMANUELLA OGOCHUKWU',
-      role: 'Finance Officer & Administrator',
-      image: '/team/team-3.jpeg',
-      fallback: 'bg-gradient-to-br from-blue-300 to-blue-500'
-    },
-    {
-      name: 'MIRACLE OKOH EKO',
-      role: 'Content Manager',
-      image: '/team/team-4.jpeg',
-      fallback: 'bg-gradient-to-br from-blue-400 to-blue-600'
-    },
-    {
-      name: 'CHUKWUDI OKAFOR',
-      role: 'Business Development Officer',
-      image: '/team/team-5.jpeg',
-      fallback: 'bg-gradient-to-br from-blue-300 to-blue-400'
-    }
-  ];
+  useEffect(() => {
+    const fetchTeam = async () => {
+      try {
+        const res = await fetch('/api/team');
+        if (res.ok) {
+          const data = await res.json();
+          setTeamMembers(data);
+        }
+      } catch (error) {
+        console.error('Error fetching team:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTeam();
+  }, []);
 
   const testimonials = [
     {
@@ -86,15 +82,15 @@ export default function TeamSection() {
     if (teamScrollRef.current) {
       const scrollAmount = 280; // Width of one team member card + gap
       const currentScroll = teamScrollRef.current.scrollLeft;
-      const newScroll = direction === 'left' 
-        ? currentScroll - scrollAmount 
+      const newScroll = direction === 'left'
+        ? currentScroll - scrollAmount
         : currentScroll + scrollAmount;
-      
+
       teamScrollRef.current.scrollTo({
         left: newScroll,
         behavior: 'smooth'
       });
-      
+
       // Update current index for pagination display
       const newIndex = Math.round(newScroll / scrollAmount);
       setTeamCurrentIndex(Math.max(0, Math.min(newIndex, teamMembers.length - 3)));
@@ -105,15 +101,15 @@ export default function TeamSection() {
     if (testimonialScrollRef.current) {
       const scrollAmount = 400; // Width of one testimonial card + gap
       const currentScroll = testimonialScrollRef.current.scrollLeft;
-      const newScroll = direction === 'left' 
-        ? currentScroll - scrollAmount 
+      const newScroll = direction === 'left'
+        ? currentScroll - scrollAmount
         : currentScroll + scrollAmount;
-      
+
       testimonialScrollRef.current.scrollTo({
         left: newScroll,
         behavior: 'smooth'
       });
-      
+
       // Update current index for pagination display
       const newIndex = Math.round(newScroll / scrollAmount);
       setTestimonialCurrentIndex(Math.max(0, Math.min(newIndex, testimonials.length - 2)));
@@ -125,76 +121,78 @@ export default function TeamSection() {
     <section id="team" className="py-24 bg-gradient-to-br from-slate-50 via-blue-50/20 to-white">
       <div className="max-w-6xl mx-auto px-6 lg:px-8">
         {/* Meet Our Team */}
-        <div className="mb-20">
-          {/* Header */}
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center px-4 py-2 bg-slate-100 rounded-full mb-6">
-              <span className="text-slate-700 text-sm font-semibold tracking-wide">● OUR EXPERTS</span>
-            </div>
-            
-            <h2 className="text-4xl lg:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
-              Meet Our <span className="bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">Team</span>
-            </h2>
-            
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              Passionate digital marketing experts dedicated to crafting innovative solutions 
-              that drive your business success.
-            </p>
-          </div>
-
-          <div className="flex justify-center mb-12">
-            <div className="flex items-center space-x-4">
-              <button 
-                onClick={() => scrollTeam('left')}
-                className="w-12 h-12 border-2 border-slate-300 rounded-full flex items-center justify-center hover:bg-slate-50 hover:border-slate-400 transition-all duration-300"
-              >
-                <ChevronLeft className="w-5 h-5 text-slate-600" />
-              </button>
-              <span className="text-slate-500 text-sm font-medium">{String(teamCurrentIndex + 1).padStart(2, '0')}/{String(Math.max(1, teamMembers.length - 2)).padStart(2, '0')}</span>
-              <button 
-                onClick={() => scrollTeam('right')}
-                className="w-12 h-12 border-2 border-slate-300 rounded-full flex items-center justify-center hover:bg-slate-50 hover:border-slate-400 transition-all duration-300"
-              >
-                <ChevronRight className="w-5 h-5 text-slate-600" />
-              </button>
-            </div>
-          </div>
-
-          {/* Team Grid */}
-          <div 
-            ref={teamScrollRef}
-            className="flex gap-12 overflow-x-auto scrollbar-hide pb-4"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {teamMembers.map((member, index) => (
-              <div key={index} className="text-center group flex-shrink-0 w-64">
-                {/* Circular Avatar */}
-                <div className="w-56 h-56 mx-auto rounded-full mb-6 relative overflow-hidden group-hover:scale-105 transition-all duration-300 shadow-2xl bg-slate-100 border-4 border-white">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className="object-cover object-[center_20%] scale-105"
-                    sizes="224px"
-                  />
-                  
-                  {/* Enhanced Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  
-                  {/* Professional Overlay Pattern */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-orange-500/20 opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
-                </div>
-                
-                <h3 className="font-bold text-slate-900 mb-2 text-lg">
-                  {member.name}
-                </h3>
-                <p className="text-slate-600 font-medium">
-                  {member.role}
-                </p>
+        {!isLoading && teamMembers.length > 0 && (
+          <div className="mb-20">
+            {/* Header */}
+            <div className="text-center mb-16">
+              <div className="inline-flex items-center px-4 py-2 bg-slate-100 rounded-full mb-6">
+                <span className="text-slate-700 text-sm font-semibold tracking-wide">● OUR EXPERTS</span>
               </div>
-            ))}
+
+              <h2 className="text-4xl lg:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
+                Meet Our <span className="bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">Team</span>
+              </h2>
+
+              <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+                Passionate digital marketing experts dedicated to crafting innovative solutions
+                that drive your business success.
+              </p>
+            </div>
+
+            <div className="flex justify-center mb-12">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => scrollTeam('left')}
+                  className="w-12 h-12 border-2 border-slate-300 rounded-full flex items-center justify-center hover:bg-slate-50 hover:border-slate-400 transition-all duration-300"
+                >
+                  <ChevronLeft className="w-5 h-5 text-slate-600" />
+                </button>
+                <span className="text-slate-500 text-sm font-medium">{String(teamCurrentIndex + 1).padStart(2, '0')}/{String(Math.max(1, teamMembers.length - 2)).padStart(2, '0')}</span>
+                <button
+                  onClick={() => scrollTeam('right')}
+                  className="w-12 h-12 border-2 border-slate-300 rounded-full flex items-center justify-center hover:bg-slate-50 hover:border-slate-400 transition-all duration-300"
+                >
+                  <ChevronRight className="w-5 h-5 text-slate-600" />
+                </button>
+              </div>
+            </div>
+
+            {/* Team Grid */}
+            <div
+              ref={teamScrollRef}
+              className="flex gap-12 overflow-x-auto scrollbar-hide pb-4"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {teamMembers.map((member) => (
+                <div key={member.id} className="text-center group flex-shrink-0 w-64">
+                  {/* Circular Avatar */}
+                  <div className="w-56 h-56 mx-auto rounded-full mb-6 relative overflow-hidden group-hover:scale-105 transition-all duration-300 shadow-2xl bg-slate-100 border-4 border-white">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className="object-cover object-[center_20%] scale-105"
+                      sizes="224px"
+                    />
+
+                    {/* Enhanced Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                    {/* Professional Overlay Pattern */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-orange-500/20 opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
+                  </div>
+
+                  <h3 className="font-bold text-slate-900 mb-2 text-lg">
+                    {member.name}
+                  </h3>
+                  <p className="text-slate-600 font-medium">
+                    {member.role}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* What Client Says */}
         <div>
@@ -203,19 +201,19 @@ export default function TeamSection() {
             <div className="inline-flex items-center px-4 py-2 bg-orange-100 rounded-full mb-6">
               <span className="text-orange-700 text-sm font-semibold tracking-wide">● CLIENT TESTIMONIALS</span>
             </div>
-            
+
             <h2 className="text-4xl lg:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
               What Clients <span className="bg-gradient-to-r from-orange-500 to-blue-600 bg-clip-text text-transparent">Say</span>
             </h2>
-            
+
             <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              Real stories from satisfied clients who&apos;ve experienced transformative results 
+              Real stories from satisfied clients who&apos;ve experienced transformative results
               through our digital marketing expertise.
             </p>
           </div>
 
           {/* Testimonials */}
-          <div 
+          <div
             ref={testimonialScrollRef}
             className="flex gap-8 overflow-x-auto scrollbar-hide pb-4 mb-8"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
@@ -243,11 +241,11 @@ export default function TeamSection() {
                     </p>
                   </div>
                 </div>
-                
+
                 <p className="text-slate-700 leading-relaxed text-lg">
                   &quot;{testimonial.content}&quot;
                 </p>
-                
+
                 {/* Rating Stars */}
                 <div className="flex items-center mt-6 pt-6 border-t border-slate-100">
                   <div className="flex space-x-1">
@@ -263,14 +261,14 @@ export default function TeamSection() {
 
           {/* Testimonial Navigation */}
           <div className="flex justify-center items-center space-x-4">
-            <button 
+            <button
               onClick={() => scrollTestimonials('left')}
               className="w-12 h-12 border-2 border-slate-300 rounded-full flex items-center justify-center hover:bg-slate-50 hover:border-slate-400 transition-all duration-300"
             >
               <ChevronLeft className="w-5 h-5 text-slate-600" />
             </button>
             <span className="text-slate-500 text-sm font-medium">{String(testimonialCurrentIndex + 1).padStart(2, '0')}/{String(Math.max(1, testimonials.length - 1)).padStart(2, '0')}</span>
-            <button 
+            <button
               onClick={() => scrollTestimonials('right')}
               className="w-12 h-12 border-2 border-slate-300 rounded-full flex items-center justify-center hover:bg-slate-50 hover:border-slate-400 transition-all duration-300"
             >

@@ -1,35 +1,52 @@
 'use client';
 
-import { useState } from 'react';
-import { ChevronDown, Target, Eye, Heart } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronDown, Target, Eye, Heart, LucideIcon } from 'lucide-react';
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Target,
+  Eye,
+  Heart,
+};
+
+interface AboutItem {
+  id: string;
+  type: string;
+  title: string;
+  content: string;
+  icon: string | null;
+}
 
 export default function AboutSection() {
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
+  const [accordionItems, setAccordionItems] = useState<AboutItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const accordionItems = [
-    {
-      id: 'mission',
-      title: 'Mission',
-      icon: Target,
-      content: 'To empower businesses with innovative digital strategies and robust support systems that drive sustainable growth.'
-    },
-    {
-      id: 'vision',
-      title: 'Vision',
-      icon: Eye,
-      content: 'To be the leading catalyst for business success in Nigeria and beyond, known for our integrity, expertise, and commitment to client results.'
-    },
-    {
-      id: 'values',
-      title: 'Core Values',
-      icon: Heart,
-      content: 'Innovation, Integrity, Collaboration, Excellence, and Client-Centricity.'
-    }
-  ];
+  useEffect(() => {
+    const fetchAbout = async () => {
+      try {
+        const res = await fetch('/api/about');
+        if (res.ok) {
+          const data = await res.json();
+          setAccordionItems(data);
+        }
+      } catch (error) {
+        console.error('Error fetching about section:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAbout();
+  }, []);
 
   const toggleAccordion = (id: string) => {
     setOpenAccordion(openAccordion === id ? null : id);
   };
+
+  if (isLoading || accordionItems.length === 0) {
+    return null; // Or a skeleton
+  }
 
   return (
     <section id="about" className="py-24 bg-gradient-to-br from-blue-50/30 via-white to-slate-50/50">
@@ -67,7 +84,7 @@ export default function AboutSection() {
           {/* Right - Compact Accordion */}
           <div className="space-y-4">
             {accordionItems.map((item) => {
-              const Icon = item.icon;
+              const Icon = item.icon && ICON_MAP[item.icon] ? ICON_MAP[item.icon] : Target;
               const isOpen = openAccordion === item.id;
 
               return (

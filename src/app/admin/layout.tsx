@@ -11,6 +11,10 @@ import {
     LogOut,
     Menu,
     X,
+    Info,
+    Briefcase,
+    Image,
+    Users,
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -95,6 +99,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     const navigation = [
         { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
         { name: 'Blog Posts', href: '/admin/blog', icon: FileText },
+        { name: 'About Section', href: '/admin/about', icon: Info },
+        { name: 'Services', href: '/admin/services', icon: Briefcase },
+        { name: 'Portfolio', href: '/admin/portfolio', icon: Image },
+        { name: 'Team', href: '/admin/team', icon: Users },
         { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
         { name: 'Settings', href: '/admin/settings', icon: Settings },
     ];
@@ -138,8 +146,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                                     key={item.name}
                                     href={item.href}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                                            ? 'bg-blue-50 text-blue-600 font-medium'
-                                            : 'text-gray-700 hover:bg-gray-100'
+                                        ? 'bg-blue-50 text-blue-600 font-medium'
+                                        : 'text-gray-700 hover:bg-gray-100'
                                         }`}
                                 >
                                     <item.icon className="w-5 h-5" />

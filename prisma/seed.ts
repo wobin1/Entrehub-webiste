@@ -1,5 +1,5 @@
 import { prisma } from '../src/lib/prisma';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 async function main() {
     console.log('🌱 Starting database seed...');
@@ -508,6 +508,188 @@ async function main() {
             role: 'SUPER_ADMIN',
         },
     });
+
+    // Create About Section Items
+    console.log('Creating about section items...');
+    await prisma.aboutSection.upsert({
+        where: { type: 'mission' },
+        update: {},
+        create: {
+            type: 'mission',
+            title: 'Mission',
+            content: 'To empower businesses with innovative digital strategies and robust support systems that drive sustainable growth.',
+            icon: 'Target',
+        },
+    });
+
+    await prisma.aboutSection.upsert({
+        where: { type: 'vision' },
+        update: {},
+        create: {
+            type: 'vision',
+            title: 'Vision',
+            content: 'To be the leading catalyst for business success in Nigeria and beyond, known for our integrity, expertise, and commitment to client results.',
+            icon: 'Eye',
+        },
+    });
+
+    await prisma.aboutSection.upsert({
+        where: { type: 'values' },
+        update: {},
+        create: {
+            type: 'values',
+            title: 'Core Values',
+            content: 'Innovation, Integrity, Collaboration, Excellence, and Client-Centricity.',
+            icon: 'Heart',
+        },
+    });
+
+    // Create Services
+    console.log('Creating services...');
+    const serviceData = [
+        {
+            title: 'Web & App Development',
+            description: 'We develop digital assets, such as websites, microsite and mobile apps, for your business needs.',
+            icon: 'Globe',
+            included: "What's included in service?",
+            order: 1,
+        },
+        {
+            title: 'Digital Marketing',
+            description: 'We craft comprehensive digital marketing strategies to increase your visibility and customer engagement.',
+            icon: 'Share2',
+            included: "What's included in service?",
+            order: 2,
+        },
+        {
+            title: 'Brand Design & Communication',
+            description: 'From your logo to your messaging, we ensure your brand tells a powerful and consistent story.',
+            icon: 'Mail',
+            included: "What's included in service?",
+            order: 3,
+        },
+        {
+            title: 'Search Engine Optimization',
+            description: 'We can effectively communicate with Google to help your website appears on top within minutes.',
+            icon: 'Search',
+            included: "What's included in service?",
+            order: 4,
+        },
+        {
+            title: 'Creative & Content',
+            description: 'We bring out of the box creative contents that matter to your audience & business growth.',
+            icon: 'Palette',
+            included: "What's included in service?",
+            order: 5,
+        },
+        {
+            title: 'Training & Business Support',
+            description: 'We offer workshops and consulting to equip your team with the skills for sustainable growth.',
+            icon: 'Megaphone',
+            included: "What's included in service?",
+            order: 6,
+        },
+    ];
+
+    for (const service of serviceData) {
+        await prisma.service.upsert({
+            where: { id: `service-${service.order}` },
+            update: service,
+            create: {
+                id: `service-${service.order}`,
+                ...service
+            },
+        });
+    }
+
+    // Create Portfolio Projects
+    console.log('Creating portfolio projects...');
+    const projectData = [
+        {
+            category: 'SEO Optimization',
+            title: "TechCorp's Traffic Soars With SEO Optimization",
+            description: 'Boosted organic traffic by 50% for TechCorp through carefully targeted keyword strategies and comprehensive on-page optimization, driving significant growth in search engine visibility.',
+            metric: '+50%',
+            metricLabel: 'Organic traffic',
+            image: '/images/img-1.jpg',
+            order: 1,
+        },
+        {
+            category: 'Social Media Management',
+            title: "FashionWave's Engagement Soars With Creative Campaigns",
+            description: 'Increased follower engagement for FashionWave by 75% through the implementation of creative content strategies and interactive social media campaigns, significantly enhancing brand interaction and customer connection across all platforms.',
+            metric: '+75%',
+            metricLabel: 'Follower engagement',
+            image: '/images/img-2.jpg',
+            order: 2,
+        },
+        {
+            category: 'Brand Strategy',
+            title: "UrbanNest's Brand Revamp Boosts Recognition",
+            description: 'Revamped UrbanNest\'s brand identity, leading to a 50% increase in customer recognition and trust. The refreshed image strengthened market presence and deepened connections with the target audience.',
+            metric: '+50%',
+            metricLabel: 'Customer recognition',
+            image: '/images/img-3.jpg',
+            order: 3,
+        }
+    ];
+
+    for (const project of projectData) {
+        await prisma.portfolioProject.upsert({
+            where: { id: `project-${project.order}` },
+            update: project,
+            create: {
+                id: `project-${project.order}`,
+                ...project
+            },
+        });
+    }
+
+    // Create Team Members
+    console.log('Creating team members...');
+    const teamData = [
+        {
+            name: 'GABRIEL ADINGA',
+            role: 'Manager',
+            image: '/team/team-1.jpeg',
+            order: 1,
+        },
+        {
+            name: 'GENESIS THOMAS',
+            role: 'Creative Designer',
+            image: '/team/team-2.jpeg',
+            order: 2,
+        },
+        {
+            name: 'OBI EMMANUELLA OGOCHUKWU',
+            role: 'Finance Officer & Administrator',
+            image: '/team/team-3.jpeg',
+            order: 3,
+        },
+        {
+            name: 'MIRACLE OKOH EKO',
+            role: 'Content Manager',
+            image: '/team/team-4.jpeg',
+            order: 4,
+        },
+        {
+            name: 'CHUKWUDI OKAFOR',
+            role: 'Business Development Officer',
+            image: '/team/team-5.jpeg',
+            order: 5,
+        }
+    ];
+
+    for (const member of teamData) {
+        await prisma.teamMember.upsert({
+            where: { id: `team-${member.order}` },
+            update: member,
+            create: {
+                id: `team-${member.order}`,
+                ...member
+            },
+        });
+    }
 
     console.log('✅ Database seeded successfully!');
     console.log('\n📝 Admin Credentials:');

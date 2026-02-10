@@ -6,9 +6,10 @@ import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
 // PUT /api/blog/tags/[id] - Update a tag (admin only)
 export async function PUT(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         const authHeader = request.headers.get('authorization');
         const token = extractTokenFromHeader(authHeader);
 
@@ -20,7 +21,7 @@ export async function PUT(
         const validatedData = tagSchema.parse(body);
 
         const tag = await prisma.tag.update({
-            where: { id: params.id },
+            where: { id },
             data: validatedData,
         });
 
@@ -34,9 +35,10 @@ export async function PUT(
 // DELETE /api/blog/tags/[id] - Delete a tag (admin only)
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params;
         const authHeader = request.headers.get('authorization');
         const token = extractTokenFromHeader(authHeader);
 
@@ -45,7 +47,7 @@ export async function DELETE(
         }
 
         await prisma.tag.delete({
-            where: { id: params.id },
+            where: { id },
         });
 
         return NextResponse.json({ message: 'Tag deleted successfully' });
