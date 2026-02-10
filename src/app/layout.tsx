@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Oswald } from "next/font/google";
+import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-const oswald = Oswald({
-  variable: "--font-oswald",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -23,7 +22,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${oswald.variable} font-sans antialiased`}
+        className={`${inter.variable} font-sans antialiased`}
+        suppressHydrationWarning
       >
         {/* Google Analytics */}
         <Script
