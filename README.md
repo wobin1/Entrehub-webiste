@@ -2,6 +2,16 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Database Setup
+
+To initialize your database with migrations and seed data, run:
+
+```bash
+npm run db:setup
+```
+
+### Development Server
+
 First, run the development server:
 
 ```bash
