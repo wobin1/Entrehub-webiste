@@ -12,19 +12,32 @@ if (process.env.NODE_ENV !== 'production') {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 
+// Prepare the connection URL with compatibility flags
+const rawUrl = process.env.DATABASE_URL;
+let connectionUrl = rawUrl;
+
+// Add libpq compatibility and sslmode if missing, to satisfy pg and Prisma 7 stricter checks
+if (!connectionUrl.includes('uselibpqcompat=')) {
+    const separator = connectionUrl.includes('?') ? '&' : '?';
+    connectionUrl += `${separator}uselibpqcompat=true`;
+}
+if (!connectionUrl.includes('sslmode=')) {
+    connectionUrl += '&sslmode=require';
+}
+
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: connectionUrl,
     ssl: {
-        rejectUnauthorized: false
+        rejectUnauthorized: false // Required for Aiven's self-signed certificates
     }
 });
 
 // Mask sensitive info in connection string for logging
 try {
-    const url = new URL(process.env.DATABASE_URL);
-    console.log(`[Prisma] Connecting to database: ${url.host}${url.pathname}`);
+    const urlForLogging = new URL(connectionUrl);
+    console.log(`[Prisma] Connecting to database: ${urlForLogging.host}${urlForLogging.pathname}?${urlForLogging.searchParams.toString().replace(/api_key=[^&]+/, 'api_key=***')}`);
 } catch (e) {
-    console.log('[Prisma] Connecting to database (URL parsing failed)');
+    console.log('[Prisma] Connecting to database');
 }
 
 const adapter = new PrismaPg(pool);
