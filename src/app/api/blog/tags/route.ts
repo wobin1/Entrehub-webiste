@@ -2,20 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { tagSchema } from '@/lib/validations/blog';
 import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
+import { getTagsServer } from '@/lib/api/blog';
 
 // GET /api/blog/tags - Get all tags
 export async function GET() {
     try {
-        const tags = await prisma.tag.findMany({
-            include: {
-                _count: {
-                    select: { posts: true },
-                },
-            },
-            orderBy: { name: 'asc' },
-        });
-
-        return NextResponse.json({ tags });
+        const result = await getTagsServer();
+        return NextResponse.json(result);
     } catch (error) {
         console.error('Error fetching tags:', error);
         return NextResponse.json(

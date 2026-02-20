@@ -1,9 +1,10 @@
 import { Calendar, Clock, ArrowLeft, Share2, Facebook, Twitter, Linkedin, Home } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getBlogPost, getBlogPosts } from '@/lib/api/client';
+import { getBlogPostServer, getBlogPostsServer } from '@/lib/api/blog';
 import { format } from 'date-fns';
 import { notFound } from 'next/navigation';
+import { BlogPost } from '@/lib/api/client';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,19 +17,18 @@ interface BlogPostPageProps {
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
     const { slug } = await params;
 
-    // Fetch the blog post
-    let post;
-    try {
-        const data = await getBlogPost(slug);
-        post = data.post;
-    } catch (_error) {
+    // Fetch the blog post directly from Prisma
+    const data = await getBlogPostServer(slug);
+    const post = data.post;
+
+    if (!post) {
         notFound();
     }
 
-    // Fetch related posts from the same category
-    const { posts: allPosts } = await getBlogPosts({ limit: 100 });
+    // Fetch related posts from the same category directly from Prisma
+    const { posts: allPosts } = await getBlogPostsServer({ limit: 100 });
     const relatedPosts = allPosts
-        ?.filter((p) => p.category.id === post.category.id && p.id !== post.id)
+        ?.filter((p: BlogPost) => p.category.id === post.category.id && p.id !== post.id)
         .slice(0, 3) || [];
 
     return (

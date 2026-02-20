@@ -2,20 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { categorySchema } from '@/lib/validations/blog';
 import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
+import { getCategoriesServer } from '@/lib/api/blog';
 
 // GET /api/blog/categories - Get all categories
 export async function GET() {
     try {
-        const categories = await prisma.category.findMany({
-            include: {
-                _count: {
-                    select: { posts: true },
-                },
-            },
-            orderBy: { name: 'asc' },
-        });
-
-        return NextResponse.json({ categories });
+        const result = await getCategoriesServer();
+        return NextResponse.json(result);
     } catch (error) {
         console.error('Error fetching categories:', error);
         return NextResponse.json(

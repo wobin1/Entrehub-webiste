@@ -1,17 +1,17 @@
 import { Calendar, Clock, ArrowRight, Home } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { getBlogPosts, getCategories } from '@/lib/api/client';
+import { getBlogPostsServer, getCategoriesServer } from '@/lib/api/blog';
 import { format } from 'date-fns';
 import BlogPageClient from './BlogPageClient';
 
 export const dynamic = 'force-dynamic';
 
 export default async function BlogPage() {
-  // Fetch blog posts and categories from API
+  // Fetch blog posts and categories directly from Prisma
   const [{ posts }, { categories }] = await Promise.all([
-    getBlogPosts({ limit: 100 }), // Fetch all posts for client-side filtering
-    getCategories(),
+    getBlogPostsServer({ limit: 100 }), // Fetch all posts for client-side filtering
+    getCategoriesServer(),
   ]);
 
   // Find featured post

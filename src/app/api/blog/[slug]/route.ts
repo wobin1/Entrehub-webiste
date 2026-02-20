@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { updateBlogPostSchema } from '@/lib/validations/blog';
 import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
+import { getBlogPostServer } from '@/lib/api/blog';
 
 // GET /api/blog/[slug] - Get a single blog post by slug
 export async function GET(
@@ -10,50 +11,16 @@ export async function GET(
 ) {
     try {
         const { slug } = await params;
+        const result = await getBlogPostServer(slug);
 
-        const post = await prisma.blogPost.findUnique({
-            where: { slug },
-            // ... (rest of search/replace is long, I'll be careful with chunks)
-            include: {
-                author: {
-                    select: {
-                        id: true,
-                        name: true,
-                        avatar: true,
-                        bio: true,
-                    },
-                },
-                category: {
-                    select: {
-                        id: true,
-                        name: true,
-                        slug: true,
-                    },
-                },
-                tags: {
-                    select: {
-                        id: true,
-                        name: true,
-                        slug: true,
-                    },
-                },
-            },
-        });
-
-        if (!post) {
+        if (!result.post) {
             return NextResponse.json(
                 { error: 'Blog post not found' },
                 { status: 404 }
             );
         }
 
-        // Increment view count
-        await prisma.blogPost.update({
-            where: { slug },
-            data: { views: { increment: 1 } },
-        });
-
-        return NextResponse.json({ post });
+        return NextResponse.json(result);
     } catch (error) {
         console.error('Error fetching blog post:', error);
         return NextResponse.json(

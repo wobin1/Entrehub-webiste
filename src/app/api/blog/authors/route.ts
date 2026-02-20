@@ -2,20 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { authorSchema } from '@/lib/validations/blog';
 import { verifyToken, extractTokenFromHeader } from '@/lib/auth';
+import { getAuthorsServer } from '@/lib/api/blog';
 
 // GET /api/blog/authors - Get all authors
 export async function GET() {
     try {
-        const authors = await prisma.author.findMany({
-            include: {
-                _count: {
-                    select: { posts: true },
-                },
-            },
-            orderBy: { name: 'asc' },
-        });
-
-        return NextResponse.json({ authors });
+        const result = await getAuthorsServer();
+        return NextResponse.json(result);
     } catch (error) {
         console.error('Error fetching authors:', error);
         return NextResponse.json(
