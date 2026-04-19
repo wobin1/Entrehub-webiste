@@ -71,10 +71,10 @@ export async function POST(request: NextRequest) {
         });
 
         return NextResponse.json({ webinar }, { status: 201 });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error creating webinar:', error);
-        if (error.name === 'ZodError') {
-            return NextResponse.json({ error: 'Validation error', details: error.errors }, { status: 400 });
+        if (error && typeof error === 'object' && 'name' in error && error.name === 'ZodError') {
+            return NextResponse.json({ error: 'Validation error', details: 'errors' in error ? error.errors : [] }, { status: 400 });
         }
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }

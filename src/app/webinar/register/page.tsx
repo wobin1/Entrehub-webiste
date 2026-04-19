@@ -84,7 +84,7 @@ const timezones = Intl.supportedValuesOf?.('timeZone').map(tz => ({ label: tz, v
 ]
 
 export default function WebinarRegistrationPage() {
-  const [activeWebinar, setActiveWebinar] = React.useState<any>(null)
+  const [activeWebinar, setActiveWebinar] = React.useState<{ id: string; title: string; description: string; scheduledAt: string; meetingLink: string } | null>(null)
   const [isLoadingWebinar, setIsLoadingWebinar] = React.useState(true)
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [isSuccess, setIsSuccess] = React.useState(false)
@@ -125,8 +125,7 @@ export default function WebinarRegistrationPage() {
   const selectedCountry = watch("country")
   const selectedTopics = watch("topicsOfInterest")
 
-  const onSubmit = async (data: any) => {
-    const validatedData = data as WebinarRegistrationInput
+  const onSubmit = async (data: WebinarRegistrationInput) => {
     if (!activeWebinar) {
       toast.error("No active webinar found. Please try again later.")
       return
@@ -152,7 +151,8 @@ export default function WebinarRegistrationPage() {
       } else {
         toast.error(result.error || "Something went wrong")
       }
-    } catch (_err) {
+    } catch (error) {
+      console.error('Registration error:', error);
       toast.error("An error occurred. Please try again.")
     } finally {
       setIsSubmitting(false)
