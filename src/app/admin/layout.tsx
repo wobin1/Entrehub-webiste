@@ -15,6 +15,7 @@ import {
     Briefcase,
     Image,
     Users,
+    Video,
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -103,6 +104,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         { name: 'Services', href: '/admin/services', icon: Briefcase },
         { name: 'Portfolio', href: '/admin/portfolio', icon: Image },
         { name: 'Team', href: '/admin/team', icon: Users },
+        { name: 'Webinar', href: '/admin/webinar', icon: Video },
         { name: 'Messages', href: '/admin/messages', icon: MessageSquare },
         { name: 'Settings', href: '/admin/settings', icon: Settings },
     ];

@@ -170,3 +170,52 @@ model TeamMember {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// Webinar Registration Model
+model WebinarRegistration {
+  id                String   @id @default(cuid())
+  firstName         String
+  lastName          String
+  email             String
+  phone             String?
+  jobTitle          String?
+  companyName       String?
+  country           String
+  state             String?
+  city              String?
+  industry          String
+  timezone          String
+  howDidYouHear     String?
+  topicsOfInterest  String[] // Array of strings
+  agreeToTerms      Boolean
+  subscribeUpdates  Boolean  @default(false)
+  
+  // Relation to Webinar
+  webinarId         String?
+  webinar           Webinar? @relation(fields: [webinarId], references: [id])
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([email])
+  @@index([createdAt])
+  @@index([webinarId])
+}
+
+// Webinar Model
+model Webinar {
+  id                String   @id @default(cuid())
+  title             String
+  description       String?  @db.Text
+  scheduledAt       DateTime
+  meetingLink       String?
+  isActive          Boolean  @default(true)
+  
+  registrations     WebinarRegistration[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([isActive])
+  @@index([scheduledAt])
+}
