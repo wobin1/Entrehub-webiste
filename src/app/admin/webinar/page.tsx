@@ -18,6 +18,7 @@ import {
     Briefcase
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import WebinarForm from '@/components/admin/WebinarForm';
 import { DeleteConfirmationModal } from '@/components/admin/DeleteConfirmationModal';
 import { format } from 'date-fns';
@@ -124,7 +125,7 @@ export default function WebinarManagementPage() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                <Loader2 className="w-8 h-8 animate-spin text-navy" />
             </div>
         );
     }
@@ -133,7 +134,7 @@ export default function WebinarManagementPage() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
+                    <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
                         Webinar Management
                     </h1>
                     <p className="text-gray-500 mt-1">Schedule and manage your webinars and participants.</p>
@@ -143,7 +144,7 @@ export default function WebinarManagementPage() {
                         setSelectedWebinar(null);
                         setIsFormOpen(true);
                     }}
-                    className="bg-blue-600 hover:bg-blue-700 text-white gap-2 h-11 px-6 rounded-xl"
+                    className="bg-navy hover:bg-navy-hover text-white gap-2 h-11 px-6 rounded-xl"
                 >
                     <Plus className="w-4 h-4" />
                     New Webinar
@@ -155,7 +156,7 @@ export default function WebinarManagementPage() {
                 {webinars.map((webinar) => (
                     <div 
                         key={webinar.id}
-                        className={`bg-white rounded-2xl border ${webinar.isActive ? 'border-blue-200 shadow-sm' : 'border-gray-100'} p-6 transition-all hover:border-blue-300`}
+                        className={`bg-white rounded-2xl border ${webinar.isActive ? 'border-navy/25 shadow-sm' : 'border-gray-100'} p-6 transition-all hover:border-navy/25`}
                     >
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                             <div className="flex-1 space-y-2">
@@ -175,14 +176,14 @@ export default function WebinarManagementPage() {
                                 </div>
                                 <div className="flex flex-wrap gap-4 text-sm text-gray-500">
                                     <span className="flex items-center gap-1.5">
-                                        <Calendar className="w-4 h-4 text-blue-600" />
+                                        <Calendar className="w-4 h-4 text-navy" />
                                         {format(new Date(webinar.scheduledAt), 'PPP p')}
                                     </span>
                                     <button 
                                         onClick={() => fetchWebinarDetails(webinar.id)}
-                                        className="flex items-center gap-1.5 hover:text-blue-600 transition-colors"
+                                        className="flex items-center gap-1.5 hover:text-navy transition-colors"
                                     >
-                                        <Users className="w-4 h-4 text-blue-600" />
+                                        <Users className="w-4 h-4 text-navy" />
                                         {webinar._count?.registrations || 0} Registrations
                                     </button>
                                 </div>
@@ -205,7 +206,7 @@ export default function WebinarManagementPage() {
                                         setSelectedWebinar(webinar);
                                         setIsFormOpen(true);
                                     }}
-                                    className="h-10 w-10 text-gray-600 hover:text-blue-600 hover:bg-blue-50 border-gray-200"
+                                    className="h-10 w-10 text-gray-600 hover:text-navy hover:bg-navy-tint border-gray-200"
                                 >
                                     <Edit2 className="w-4 h-4" />
                                 </Button>
@@ -235,29 +236,35 @@ export default function WebinarManagementPage() {
             </div>
 
             {/* Registrants View Panel */}
-            {isRegistrantsVisible && selectedWebinarWithRegistrants && (
-                <div className="fixed inset-0 z-[60] flex justify-end">
-                    <div 
-                        className="absolute inset-0 bg-black/40 backdrop-blur-sm" 
-                        onClick={() => setIsRegistrantsVisible(false)}
-                    />
-                    <div className="relative w-full max-w-3xl bg-gray-50 h-full shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+            <DialogPrimitive.Root
+                open={isRegistrantsVisible && !!selectedWebinarWithRegistrants}
+                onOpenChange={setIsRegistrantsVisible}
+            >
+                <DialogPrimitive.Portal>
+                    <DialogPrimitive.Overlay className="fixed inset-0 z-[60] bg-navy-deep/50 backdrop-blur-sm" />
+                    <DialogPrimitive.Content
+                        aria-describedby={undefined}
+                        className="fixed inset-y-0 right-0 z-[60] flex h-full w-full max-w-3xl flex-col bg-slate-50 shadow-2xl focus:outline-none animate-in slide-in-from-right duration-300"
+                    >
+                    {selectedWebinarWithRegistrants && (<>
                         <div className="bg-white border-b border-gray-100 p-6 flex items-center justify-between sticky top-0 z-10">
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900">Webinar Registrations</h2>
+                                <DialogPrimitive.Title className="text-xl font-bold text-gray-900">Webinar Registrations</DialogPrimitive.Title>
                                 <p className="text-sm text-gray-500">{selectedWebinarWithRegistrants.title}</p>
                             </div>
-                            <Button variant="ghost" size="icon" onClick={() => setIsRegistrantsVisible(false)}>
-                                <ChevronRight className="w-6 h-6" />
-                            </Button>
+                            <DialogPrimitive.Close asChild>
+                                <Button variant="ghost" size="icon" aria-label="Close registrations panel" className="h-11 w-11">
+                                    <ChevronRight className="w-6 h-6" aria-hidden="true" />
+                                </Button>
+                            </DialogPrimitive.Close>
                         </div>
                         
                         <div className="flex-1 overflow-y-auto p-6 space-y-4">
                             {selectedWebinarWithRegistrants.registrations?.map((reg) => (
-                                <div key={reg.id} className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4 hover:border-blue-200 transform transition-all group">
+                                <div key={reg.id} className="bg-white rounded-2xl border border-gray-100 p-6 space-y-4 hover:border-navy/25 transform transition-all group">
                                     <div className="flex items-start justify-between">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-lg">
+                                            <div className="w-12 h-12 rounded-xl bg-navy-tint flex items-center justify-center text-navy font-bold text-lg">
                                                 {reg.firstName[0]}{reg.lastName[0]}
                                             </div>
                                             <div>
@@ -269,7 +276,7 @@ export default function WebinarManagementPage() {
                                     
                                     <div className="grid md:grid-cols-2 gap-y-3 gap-x-6 pt-2">
                                         <div className="flex items-center gap-2.5 text-sm text-gray-600">
-                                            <Mail className="w-4 h-4 text-blue-500" />
+                                            <Mail className="w-4 h-4 text-navy" />
                                             {reg.email}
                                         </div>
                                         {reg.phone && (
@@ -289,7 +296,7 @@ export default function WebinarManagementPage() {
                                     </div>
                                     
                                     <div className="pt-2">
-                                        <span className="px-3 py-1 rounded-lg bg-gray-50 text-gray-600 text-xs font-semibold border border-gray-100 group-hover:bg-blue-50 group-hover:border-blue-100 transition-colors">
+                                        <span className="px-3 py-1 rounded-lg bg-gray-50 text-gray-600 text-xs font-semibold border border-gray-100 group-hover:bg-navy-tint group-hover:border-navy/25 transition-colors">
                                             Industry: {reg.industry}
                                         </span>
                                     </div>
@@ -302,9 +309,10 @@ export default function WebinarManagementPage() {
                                 </div>
                             )}
                         </div>
-                    </div>
-                </div>
-            )}
+                    </>)}
+                    </DialogPrimitive.Content>
+                </DialogPrimitive.Portal>
+            </DialogPrimitive.Root>
 
             <WebinarForm
                 isOpen={isFormOpen}

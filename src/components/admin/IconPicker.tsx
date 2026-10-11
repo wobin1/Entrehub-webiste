@@ -58,19 +58,20 @@ export function IconPicker({ isOpen, onOpenChange, onSelect, currentIcon }: Icon
                 <DialogHeader className="p-6 border-b">
                     <DialogTitle className="flex items-center justify-between">
                         <span>Select Icon</span>
-                        <button
+                        <button type="button"
                             onClick={() => onOpenChange(false)}
                             className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
-                        >
-                            <X className="w-5 h-5 text-gray-400" />
+ aria-label="Close">
+                            <X className="w-5 h-5 text-gray-500" aria-hidden="true" />
                         </button>
                     </DialogTitle>
                     <div className="relative mt-4">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                         <input
                             type="text"
                             placeholder="Search icons..."
-                            className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                            aria-label="Search icons"
+                            className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 text-sm"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             autoFocus
@@ -93,18 +94,18 @@ export function IconPicker({ isOpen, onOpenChange, onSelect, currentIcon }: Icon
                                     className={`
                     flex flex-col items-center justify-center p-3 rounded-xl border transition-all group relative
                     ${isSelected
-                                            ? 'border-blue-500 bg-blue-50 text-blue-600'
-                                            : 'border-gray-100 hover:border-blue-200 hover:bg-blue-50/50 text-gray-600'
+                                            ? 'border-navy bg-navy-tint text-navy'
+                                            : 'border-gray-100 hover:border-navy/25 hover:bg-navy-tint/50 text-gray-600'
                                         }
                   `}
                                     title={name}
                                 >
                                     <IconComponent className={`w-6 h-6 mb-1 ${!isSelected && 'group-hover:scale-110 transition-transform'}`} />
-                                    <span className="text-[10px] text-gray-400 truncate w-full text-center">
+                                    <span className="text-[10px] text-gray-500 truncate w-full text-center">
                                         {name}
                                     </span>
                                     {isSelected && (
-                                        <div className="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full p-0.5">
+                                        <div className="absolute -top-1 -right-1 bg-navy text-white rounded-full p-0.5">
                                             <Check className="w-3 h-3" />
                                         </div>
                                     )}

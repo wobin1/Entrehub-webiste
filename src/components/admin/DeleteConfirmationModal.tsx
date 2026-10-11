@@ -33,7 +33,7 @@ export function DeleteConfirmationModal({
                 <DialogHeader>
                     <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 bg-red-100 rounded-full">
-                            <AlertTriangle className="h-6 w-6 text-red-600" />
+                            <AlertTriangle className="h-6 w-6 text-red-600" aria-hidden="true" />
                         </div>
                         <DialogTitle>{title}</DialogTitle>
                     </div>
@@ -41,11 +41,11 @@ export function DeleteConfirmationModal({
                         {description} <span className="font-semibold text-gray-900">&quot;{itemName}&quot;</span>? This action cannot be undone.
                     </DialogDescription>
                 </DialogHeader>
-                <DialogFooter className="gap-2 sm:gap-0">
+                <DialogFooter className="gap-2">
                     <button
                         type="button"
                         onClick={() => onOpenChange(false)}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-navy/30 transition-colors"
                     >
                         Cancel
                     </button>

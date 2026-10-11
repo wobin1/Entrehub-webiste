@@ -80,7 +80,7 @@ export default function TeamAdminPage() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                <Loader2 className="w-8 h-8 animate-spin text-navy" />
             </div>
         );
     }
@@ -89,8 +89,8 @@ export default function TeamAdminPage() {
         <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-3">
-                    <div className="p-3 bg-blue-100 rounded-xl">
-                        <Users className="w-6 h-6 text-blue-600" />
+                    <div className="p-3 bg-navy-tint rounded-xl">
+                        <Users className="w-6 h-6 text-navy" />
                     </div>
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900">Team Members</h1>
@@ -103,7 +103,7 @@ export default function TeamAdminPage() {
                         setSelectedMember(null);
                         setIsDialogOpen(true);
                     }}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-navy text-white rounded-lg hover:bg-navy-hover transition-colors"
                 >
                     <Plus className="w-4 h-4" />
                     Add Member
@@ -114,10 +114,10 @@ export default function TeamAdminPage() {
                 {members.map((member) => (
                     <div
                         key={member.id}
-                        className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between group hover:border-blue-300 transition-colors"
+                        className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between group hover:border-navy/25 transition-colors"
                     >
                         <div className="flex items-center gap-4">
-                            <div className="text-gray-400">
+                            <div className="text-gray-500">
                                 <GripVertical className="w-5 h-5" />
                             </div>
                             <div className="w-12 h-12 bg-gray-100 rounded-full overflow-hidden relative">
@@ -130,17 +130,17 @@ export default function TeamAdminPage() {
                         </div>
 
                         <div className="flex items-center gap-2">
-                            <button
+                            <button type="button"
                                 onClick={() => handleEdit(member)}
-                                className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                            >
-                                <Pencil className="w-5 h-5" />
+                                className="p-2 text-gray-500 hover:text-navy hover:bg-navy-tint rounded-lg transition-colors"
+ aria-label="Edit">
+                                <Pencil className="w-5 h-5" aria-hidden="true" />
                             </button>
-                            <button
+                            <button type="button"
                                 onClick={() => handleDeleteClick(member)}
-                                className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                            >
-                                <Trash2 className="w-5 h-5" />
+                                className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+ aria-label="Delete">
+                                <Trash2 className="w-5 h-5" aria-hidden="true" />
                             </button>
                         </div>
                     </div>

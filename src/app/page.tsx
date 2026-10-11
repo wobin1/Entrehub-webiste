@@ -9,15 +9,17 @@ import Footer from '@/components/footer';
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <>
       <Navigation />
-      <HeroSection />
-      <AboutSection />
-      <ServicesSection />
-      <WorkSection />
-      {/* <TeamSection /> */}
-      <CTASection />
+      <main id="main-content" tabIndex={-1} className="min-h-screen focus:outline-none">
+        <HeroSection />
+        <AboutSection />
+        <ServicesSection />
+        <WorkSection />
+        {/* <TeamSection /> */}
+        <CTASection />
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

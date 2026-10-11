@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogIn } from 'lucide-react';
+import { LogIn, ArrowLeft } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function AdminLoginPage() {
@@ -54,102 +55,90 @@ export default function AdminLoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50 flex items-center justify-center p-4">
+        <main className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
             <div className="w-full max-w-md">
-                {/* Logo and Title */}
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-orange-500 rounded-2xl mb-4">
-                        <span className="text-2xl font-bold text-white">E</span>
-                    </div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h1>
-                    <p className="text-gray-600">Sign in to manage your CMS</p>
+                <div className="mb-8 text-center">
+                    <span className="mb-5 inline-flex h-14 w-14 overflow-hidden rounded-2xl shadow-sm ring-1 ring-slate-200">
+                        <Image src="/images/logo.jpeg" alt="" width={56} height={56} className="h-full w-full object-cover" priority />
+                    </span>
+                    <h1 className="mb-2 text-3xl font-bold tracking-tight text-slate-900">Admin sign in</h1>
+                    <p className="text-slate-600">Sign in to manage the ENTREHUB website.</p>
                 </div>
 
-                {/* Login Card */}
-                <div className="bg-white rounded-2xl shadow-xl p-8">
-                    {error && (
-                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                            <p className="text-red-800 text-sm font-medium">{error}</p>
-                        </div>
-                    )}
+                <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                    <div role="alert">
+                        {error && (
+                            <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+                                <p className="text-sm font-medium text-red-800">{error}</p>
+                            </div>
+                        )}
+                    </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label
-                                htmlFor="email"
-                                className="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                                Email Address
+                            <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-800">
+                                Email address
                             </label>
                             <input
                                 type="email"
                                 id="email"
                                 name="email"
+                                autoComplete="username"
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
                                 disabled={isLoading}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+                                aria-invalid={error ? true : undefined}
+                                className="w-full rounded-lg border border-slate-400 px-4 py-3 text-slate-900 placeholder:text-slate-500 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/30 disabled:cursor-not-allowed disabled:bg-slate-100"
                                 placeholder="admin@entrehub.com"
                             />
                         </div>
 
                         <div>
-                            <label
-                                htmlFor="password"
-                                className="block text-sm font-medium text-gray-700 mb-2"
-                            >
+                            <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-800">
                                 Password
                             </label>
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
+                                autoComplete="current-password"
                                 value={formData.password}
                                 onChange={handleChange}
                                 required
                                 disabled={isLoading}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-                                placeholder="••••••••"
+                                aria-invalid={error ? true : undefined}
+                                className="w-full rounded-lg border border-slate-400 px-4 py-3 text-slate-900 focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/30 disabled:cursor-not-allowed disabled:bg-slate-100"
                             />
                         </div>
 
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-gradient-to-r from-blue-600 to-orange-500 text-white font-semibold py-3 px-6 rounded-lg hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="flex min-h-12 w-full items-center justify-center gap-2 rounded-lg bg-navy px-6 font-semibold text-white shadow-sm transition-colors hover:bg-navy-hover disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {isLoading ? (
                                 <>
-                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                    Signing in...
+                                    <span className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" aria-hidden="true" />
+                                    Signing in…
                                 </>
                             ) : (
                                 <>
-                                    <LogIn className="w-5 h-5" />
-                                    Sign In
+                                    <LogIn className="h-5 w-5" aria-hidden="true" />
+                                    Sign in
                                 </>
                             )}
                         </button>
                     </form>
-
-                    {/* Default credentials hint */}
-                    {/* <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                        <p className="text-sm text-blue-800 font-medium mb-1">Default Credentials:</p>
-                        <p className="text-sm text-blue-700">Email: admin@entrehub.com</p>
-                        <p className="text-sm text-blue-700">Password: admin123</p>
-                    </div> */}
                 </div>
 
-                <div className="text-center mt-6">
-                    <Link
-                        href="/"
-                        className="text-sm text-gray-600 hover:text-blue-600 transition-colors"
-                    >
-                        ← Back to website
+                <p className="mt-6 text-center">
+                    <Link href="/" className="inline-flex min-h-11 items-center gap-1.5 text-sm text-slate-600 transition-colors hover:text-navy">
+                        <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                        Back to website
                     </Link>
-                </div>
+                </p>
             </div>
-        </div>
+        </main>
     );
 }

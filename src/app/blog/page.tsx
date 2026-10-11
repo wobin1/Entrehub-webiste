@@ -1,11 +1,20 @@
-import { Calendar, Clock, ArrowRight, Home } from 'lucide-react';
+import { ArrowRight, Calendar, Clock } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getBlogPostsServer, getCategoriesServer } from '@/lib/api/blog';
 import { format } from 'date-fns';
+import Navigation from '@/components/navigation';
+import Footer from '@/components/footer';
+import AuthorAvatar from '@/components/blog/author-avatar';
 import BlogPageClient from './BlogPageClient';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+  title: 'Blog | ENTREHUB',
+  description: 'Insights, tips, and strategies to help your business grow in the digital age.',
+};
 
 export default async function BlogPage() {
   // Fetch blog posts and categories directly from Prisma
@@ -18,119 +27,93 @@ export default async function BlogPage() {
   const featuredPost = posts?.find((post) => post.featured);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      {/* Header */}
-      <header className="border-b border-gray-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
-            >
-              <Home className="w-5 h-5" />
-              <span className="font-medium">Back to Home</span>
-            </Link>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
-              EntreHub Blog
+    <>
+      <Navigation />
+
+      <main id="main-content" tabIndex={-1} className="min-h-screen bg-slate-50 pt-20 focus:outline-none">
+        <header className="border-b border-slate-200 bg-white">
+          <div className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6 lg:px-8 lg:py-20">
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-navy">ENTREHUB Blog</p>
+            <h1 className="mb-5 text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+              Insights for growing <span className="text-navy">brands</span>
             </h1>
+            <p className="mx-auto max-w-2xl text-lg leading-relaxed text-slate-600">
+              Insights, tips, and strategies to help your business grow in the digital age.
+            </p>
           </div>
-        </div>
-      </header>
+        </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold mb-6">
-            Our{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-orange-500 bg-clip-text text-transparent">
-              Blog
-            </span>
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Insights, tips, and strategies to help your business grow in the digital age
-          </p>
-        </div>
+        <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+          {featuredPost && (
+            <section aria-labelledby="featured-heading" className="mb-16">
+              <h2 id="featured-heading" className="mb-6 text-sm font-semibold uppercase tracking-wider text-slate-600">
+                Featured article
+              </h2>
 
-        {/* Featured Post */}
-        {featuredPost && (
-          <div className="mb-16">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="h-1 w-12 bg-gradient-to-r from-blue-600 to-orange-500 rounded-full" />
-              <h3 className="text-2xl font-bold text-gray-900">Featured Article</h3>
-            </div>
-
-            <Link href={`/blog/${featuredPost.slug}`}>
-              <div className="group relative overflow-hidden rounded-2xl bg-white shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer">
-                <div className="grid md:grid-cols-2 gap-8">
-                  {/* Image */}
-                  <div className="relative h-64 md:h-full overflow-hidden">
-                    <Image
-                      src={featuredPost.coverImage}
-                      alt={featuredPost.title}
-                      fill
-                      className="object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-8 flex flex-col justify-center">
-                    <div className="flex items-center gap-4 mb-4">
-                      <span className="px-4 py-1.5 bg-gradient-to-r from-blue-600 to-orange-500 text-white text-sm font-semibold rounded-full">
-                        {featuredPost.category.name}
-                      </span>
-                      <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full">
-                        ⭐ Featured
-                      </span>
-                    </div>
-
-                    <h4 className="text-3xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">
-                      {featuredPost.title}
-                    </h4>
-
-                    <p className="text-gray-600 mb-6 line-clamp-3">{featuredPost.excerpt}</p>
-
-                    <div className="flex items-center gap-6 mb-6">
-                      <div className="flex items-center gap-2">
-                        <Image
-                          src={featuredPost.author.avatar || '/default-avatar.png'}
-                          alt={featuredPost.author.name}
-                          width={40}
-                          height={40}
-                          className="rounded-full"
-                        />
-                        <span className="text-sm font-medium text-gray-700">
-                          {featuredPost.author.name}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          {featuredPost.publishedAt
-                            ? format(new Date(featuredPost.publishedAt), 'MMM dd, yyyy')
-                            : 'Draft'}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          {featuredPost.readTime}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-blue-600 font-semibold group-hover:gap-4 transition-all">
-                      Read Article
-                      <ArrowRight className="w-5 h-5" />
-                    </div>
-                  </div>
+              <article className="group relative grid overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-lg md:grid-cols-2">
+                <div className="relative aspect-[16/10] overflow-hidden bg-slate-100 md:aspect-auto md:min-h-[360px]">
+                  <Image
+                    src={featuredPost.coverImage}
+                    alt=""
+                    fill
+                    priority
+                    sizes="(min-width: 768px) 560px, 100vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
                 </div>
-              </div>
-            </Link>
-          </div>
-        )}
 
-        {/* Client-side filtering and display */}
-        <BlogPageClient posts={posts || []} categories={categories || []} />
+                <div className="flex flex-col justify-center p-6 sm:p-10">
+                  <p className="mb-4 flex items-center gap-3 text-xs font-semibold uppercase tracking-wider">
+                    <span className="text-orange-700">{featuredPost.category.name}</span>
+                    <span className="rounded-full bg-navy-tint px-2.5 py-1 text-navy">Featured</span>
+                  </p>
+
+                  <h3 className="mb-4 text-2xl font-bold leading-tight text-slate-900 sm:text-3xl">
+                    <Link
+                      href={`/blog/${featuredPost.slug}`}
+                      className="after:absolute after:inset-0 after:content-[''] group-hover:text-navy"
+                    >
+                      {featuredPost.title}
+                    </Link>
+                  </h3>
+
+                  <p className="mb-6 line-clamp-3 text-lg leading-relaxed text-slate-600">{featuredPost.excerpt}</p>
+
+                  <div className="mb-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+                    <span className="flex items-center gap-2 font-medium text-slate-900">
+                      <AuthorAvatar name={featuredPost.author.name} avatar={featuredPost.author.avatar} size={36} />
+                      {featuredPost.author.name}
+                    </span>
+                    <span className="flex items-center gap-1.5 text-slate-600">
+                      <Calendar className="h-4 w-4" aria-hidden="true" />
+                      {featuredPost.publishedAt ? (
+                        <time dateTime={featuredPost.publishedAt}>
+                          {format(new Date(featuredPost.publishedAt), 'MMM d, yyyy')}
+                        </time>
+                      ) : (
+                        'Draft'
+                      )}
+                    </span>
+                    <span className="flex items-center gap-1.5 text-slate-600">
+                      <Clock className="h-4 w-4" aria-hidden="true" />
+                      {featuredPost.readTime}
+                    </span>
+                  </div>
+
+                  <span className="inline-flex items-center gap-2 font-semibold text-navy" aria-hidden="true">
+                    Read article
+                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </div>
+              </article>
+            </section>
+          )}
+
+          <BlogPageClient posts={posts || []} categories={categories || []} />
+        </div>
       </main>
-    </div>
+
+      <Footer />
+    </>
   );
 }

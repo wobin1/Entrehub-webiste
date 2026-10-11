@@ -117,7 +117,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-orange-500 text-white font-semibold rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center gap-2 px-6 py-3 bg-navy text-white font-semibold rounded-lg hover:bg-navy-hover shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {isLoading ? (
                             <>
@@ -149,7 +149,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                             value={formData.title}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 text-lg font-semibold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-3 text-lg font-semibold border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                             placeholder="Enter post title..."
                         />
                     </div>
@@ -165,7 +165,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                             value={formData.slug}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 font-mono text-sm"
                             placeholder="post-slug"
                         />
                         <p className="text-xs text-gray-500 mt-1">
@@ -184,7 +184,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                             onChange={handleChange}
                             required
                             rows={3}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 resize-none"
                             placeholder="Brief description of the post..."
                         />
                     </div>
@@ -217,7 +217,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                                     name="published"
                                     checked={formData.published}
                                     onChange={handleChange}
-                                    className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                                    className="w-5 h-5 text-navy rounded focus:ring-2 focus:ring-navy/30"
                                 />
                                 <span className="text-sm font-medium text-gray-700">Published</span>
                             </label>
@@ -227,7 +227,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                                     name="featured"
                                     checked={formData.featured}
                                     onChange={handleChange}
-                                    className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                                    className="w-5 h-5 text-navy rounded focus:ring-2 focus:ring-navy/30"
                                 />
                                 <span className="text-sm font-medium text-gray-700">Featured Post</span>
                             </label>
@@ -245,7 +245,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                             value={formData.coverImage}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 text-sm"
                             placeholder="https://example.com/image.jpg"
                         />
                         {formData.coverImage && (
@@ -273,7 +273,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                             value={formData.categoryId}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                         >
                             <option value="">Select category</option>
                             {categories.map((cat) => (
@@ -294,7 +294,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                             value={formData.authorId}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                         >
                             <option value="">Select author</option>
                             {authors.map((author) => (
@@ -315,7 +315,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                                     type="button"
                                     onClick={() => handleTagToggle(tag.id)}
                                     className={`px-3 py-1.5 text-sm rounded-full transition-colors ${formData.tagIds.includes(tag.id)
-                                        ? 'bg-blue-600 text-white'
+                                        ? 'bg-navy text-white'
                                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
@@ -335,7 +335,7 @@ export default function BlogForm({ initialData, isEdit = false, onSubmit }: Blog
                             name="readTime"
                             value={formData.readTime}
                             onChange={handleChange}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                             placeholder="5 min read"
                         />
                     </div>

@@ -2,6 +2,12 @@ import { prisma } from '../src/lib/prisma';
 import bcrypt from 'bcryptjs';
 
 async function main() {
+    // Only seed a fresh database, so content deleted in the admin panel isn't recreated on every deploy
+    if (await prisma.adminUser.count() > 0) {
+        console.log('🌱 Database already seeded, skipping.');
+        return;
+    }
+
     console.log('🌱 Starting database seed...');
 
     // Create Authors

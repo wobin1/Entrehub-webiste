@@ -54,24 +54,24 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                 onClick={() => editor.chain().focus().toggleBold().run()}
                 className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('bold') ? 'bg-gray-300' : ''}`}
                 title="Bold"
-            >
-                <Bold className="w-4 h-4" />
+ aria-label="Bold">
+                <Bold className="w-4 h-4" aria-hidden="true" />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleItalic().run()}
                 className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('italic') ? 'bg-gray-300' : ''}`}
                 title="Italic"
-            >
-                <Italic className="w-4 h-4" />
+ aria-label="Italic">
+                <Italic className="w-4 h-4" aria-hidden="true" />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleUnderline().run()}
                 className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('underline') ? 'bg-gray-300' : ''}`}
                 title="Underline"
-            >
-                <UnderlineIcon className="w-4 h-4" />
+ aria-label="Underline">
+                <UnderlineIcon className="w-4 h-4" aria-hidden="true" />
             </button>
             <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
             <button
@@ -96,16 +96,16 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                 onClick={() => editor.chain().focus().toggleBulletList().run()}
                 className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('bulletList') ? 'bg-gray-300' : ''}`}
                 title="Bullet List"
-            >
-                <List className="w-4 h-4" />
+ aria-label="Bullet List">
+                <List className="w-4 h-4" aria-hidden="true" />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleOrderedList().run()}
                 className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('orderedList') ? 'bg-gray-300' : ''}`}
                 title="Ordered List"
-            >
-                <ListOrdered className="w-4 h-4" />
+ aria-label="Ordered List">
+                <ListOrdered className="w-4 h-4" aria-hidden="true" />
             </button>
             <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
             <button
@@ -113,16 +113,16 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                 onClick={() => editor.chain().focus().toggleBlockquote().run()}
                 className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('blockquote') ? 'bg-gray-300' : ''}`}
                 title="Blockquote"
-            >
-                <Quote className="w-4 h-4" />
+ aria-label="Blockquote">
+                <Quote className="w-4 h-4" aria-hidden="true" />
             </button>
             <button
                 type="button"
                 onClick={() => editor.chain().focus().toggleCodeBlock().run()}
                 className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('codeBlock') ? 'bg-gray-300' : ''}`}
                 title="Code Block"
-            >
-                <Code className="w-4 h-4" />
+ aria-label="Code Block">
+                <Code className="w-4 h-4" aria-hidden="true" />
             </button>
             <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
             <button
@@ -130,16 +130,16 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                 onClick={addLink}
                 className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('link') ? 'bg-gray-300' : ''}`}
                 title="Add Link"
-            >
-                <LinkIcon className="w-4 h-4" />
+ aria-label="Add Link">
+                <LinkIcon className="w-4 h-4" aria-hidden="true" />
             </button>
             <button
                 type="button"
                 onClick={addImage}
                 className="p-2 rounded hover:bg-gray-200 transition-colors"
                 title="Add Image"
-            >
-                <ImageIcon className="w-4 h-4" />
+ aria-label="Add Image">
+                <ImageIcon className="w-4 h-4" aria-hidden="true" />
             </button>
             <div className="flex-grow" />
             <button
@@ -148,8 +148,8 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                 disabled={!editor.can().undo()}
                 className="p-2 rounded hover:bg-gray-200 transition-colors disabled:opacity-30"
                 title="Undo"
-            >
-                <Undo className="w-4 h-4" />
+ aria-label="Undo">
+                <Undo className="w-4 h-4" aria-hidden="true" />
             </button>
             <button
                 type="button"
@@ -157,8 +157,8 @@ const Toolbar = ({ editor }: { editor: Editor | null }) => {
                 disabled={!editor.can().redo()}
                 className="p-2 rounded hover:bg-gray-200 transition-colors disabled:opacity-30"
                 title="Redo"
-            >
-                <Redo className="w-4 h-4" />
+ aria-label="Redo">
+                <Redo className="w-4 h-4" aria-hidden="true" />
             </button>
         </div>
     );
@@ -172,7 +172,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
             Link.configure({
                 openOnClick: false,
                 HTMLAttributes: {
-                    class: 'text-blue-600 underline',
+                    class: 'text-navy underline',
                 },
             }),
             Image.configure({
@@ -204,7 +204,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
     }, [content, editor]);
 
     return (
-        <div className="border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent transition-all bg-white">
+        <div className="border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-navy focus-within:border-transparent transition-all bg-white">
             <Toolbar editor={editor} />
             <div className="max-h-[600px] overflow-y-auto">
                 <EditorContent editor={editor} />

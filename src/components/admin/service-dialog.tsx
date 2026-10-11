@@ -104,7 +104,7 @@ export default function ServiceDialog({
                                 required
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                             />
                         </div>
 
@@ -117,7 +117,7 @@ export default function ServiceDialog({
                                 rows={3}
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 resize-none"
                             />
                         </div>
 
@@ -129,13 +129,13 @@ export default function ServiceDialog({
                                 <button
                                     type="button"
                                     onClick={() => setIsIconPickerOpen(true)}
-                                    className="w-full flex items-center justify-between px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors"
+                                    className="w-full flex items-center justify-between px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg hover:border-navy/25 transition-colors"
                                 >
                                     <div className="flex items-center gap-2">
-                                        <SelectedIcon className="w-5 h-5 text-blue-600" />
+                                        <SelectedIcon className="w-5 h-5 text-navy" />
                                         <span className="text-sm text-gray-700">{formData.icon}</span>
                                     </div>
-                                    <LucideIcons.ChevronDown className="w-4 h-4 text-gray-400" />
+                                    <LucideIcons.ChevronDown className="w-4 h-4 text-gray-500" />
                                 </button>
                             </div>
                             <div>
@@ -146,7 +146,7 @@ export default function ServiceDialog({
                                     type="number"
                                     value={formData.order}
                                     onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                                 />
                             </div>
                         </div>
@@ -159,7 +159,7 @@ export default function ServiceDialog({
                                 type="text"
                                 value={formData.included}
                                 onChange={(e) => setFormData({ ...formData, included: e.target.value })}
-                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                             />
                         </div>
 
@@ -174,7 +174,7 @@ export default function ServiceDialog({
                             <button
                                 type="submit"
                                 disabled={isSaving}
-                                className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                                className="flex items-center gap-2 px-6 py-2 bg-navy text-white rounded-lg hover:bg-navy-hover transition-colors disabled:opacity-50"
                             >
                                 {isSaving && <Loader2 className="w-4 h-4 animate-spin" />}
                                 {service ? 'Save Changes' : 'Create Service'}
