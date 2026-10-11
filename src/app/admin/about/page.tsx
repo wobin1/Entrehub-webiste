@@ -74,7 +74,7 @@ export default function AboutAdminPage() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                <Loader2 className="w-8 h-8 animate-spin text-navy" />
             </div>
         );
     }
@@ -82,8 +82,8 @@ export default function AboutAdminPage() {
     return (
         <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-8">
-                <div className="p-3 bg-blue-100 rounded-xl">
-                    <Info className="w-6 h-6 text-blue-600" />
+                <div className="p-3 bg-navy-tint rounded-xl">
+                    <Info className="w-6 h-6 text-navy" />
                 </div>
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">About Section</h1>
@@ -102,7 +102,7 @@ export default function AboutAdminPage() {
                                 <button
                                     onClick={() => handleUpdate(item)}
                                     disabled={isSaving === item.id}
-                                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 font-medium"
+                                    className="flex items-center gap-2 px-4 py-2 bg-navy text-white rounded-lg hover:bg-navy-hover transition-colors disabled:opacity-50 font-medium"
                                 >
                                     {isSaving === item.id ? (
                                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -123,7 +123,7 @@ export default function AboutAdminPage() {
                                             type="text"
                                             value={item.title}
                                             onChange={(e) => handleChange(item.id, 'title', e.target.value)}
-                                            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                                            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 font-medium"
                                         />
                                     </div>
                                     <div>
@@ -133,13 +133,13 @@ export default function AboutAdminPage() {
                                         <button
                                             type="button"
                                             onClick={() => setIconPickerState({ isOpen: true, itemId: item.id })}
-                                            className="w-full flex items-center justify-between px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors"
+                                            className="w-full flex items-center justify-between px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg hover:border-navy/25 transition-colors"
                                         >
                                             <div className="flex items-center gap-2">
-                                                <SelectedIcon className="w-5 h-5 text-blue-600" />
+                                                <SelectedIcon className="w-5 h-5 text-navy" />
                                                 <span className="text-sm text-gray-700 font-medium">{item.icon || 'Select Icon'}</span>
                                             </div>
-                                            <ChevronDown className="w-4 h-4 text-gray-400" />
+                                            <ChevronDown className="w-4 h-4 text-gray-500" />
                                         </button>
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@ export default function AboutAdminPage() {
                                         rows={3}
                                         value={item.content}
                                         onChange={(e) => handleChange(item.id, 'content', e.target.value)}
-                                        className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-medium"
+                                        className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 resize-none font-medium"
                                     />
                                 </div>
                             </div>

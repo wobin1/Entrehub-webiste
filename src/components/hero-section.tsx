@@ -1,100 +1,129 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
+import { ArrowRight, ChevronDown, Pause, Play } from 'lucide-react';
+import ContactModal from './contact-modal';
+
+const stats = [
+  { value: '50+', label: 'Projects delivered' },
+  { value: '98%', label: 'Client success rate' },
+  { value: '24/7', label: 'Support' },
+];
+
 export default function HeroSection() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Don't autoplay background motion for users who prefer reduced motion
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      videoRef.current?.pause();
+      setIsPlaying(false);
+    }
+  }, []);
+
+  const toggleVideo = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play();
+      setIsPlaying(true);
+    } else {
+      video.pause();
+      setIsPlaying(false);
+    }
+  };
+
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
-      {/* Background Video */}
-      <div className="absolute inset-0 z-0">
+    <section
+      id="home"
+      aria-labelledby="hero-heading"
+      className="on-dark relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-navy-deep pt-20"
+    >
+      {/* Background video (decorative) */}
+      <div className="absolute inset-0" aria-hidden="true">
         <video
+          ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
-          className="w-full h-full object-cover"
+          preload="metadata"
+          className="h-full w-full object-cover"
         >
           <source src="/videos/digi-3.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
         </video>
-
-        {/* Professional Video Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-blue-900/70 to-slate-800/85"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-blue-800/40"></div>
+        <div className="absolute inset-0 bg-navy-deep/80" />
       </div>
 
-      {/* Fallback Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-white z-[-1]"></div>
-
-      <div className="relative max-w-6xl mx-auto px-6 lg:px-8 text-center">
-        {/* Main Heading */}
-        <div className="mb-12">
-          <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 mb-8">
-            <span className="text-orange-400 text-sm font-semibold tracking-wide">● DIGITAL EXCELLENCE</span>
-          </div>
-
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 tracking-tight leading-none">
-            <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
-              ENTREHUB
-            </span>
-          </h1>
-
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-medium text-gray-300 mb-8 tracking-[0.2em] uppercase">
-            Digital Creative Agency
-          </h2>
-        </div>
-
-        {/* Description */}
-        <p className="text-xl sm:text-2xl text-gray-200 mb-16 max-w-4xl mx-auto leading-relaxed font-light">
-          We transform businesses through strategic digital marketing, innovative design,
-          and data-driven solutions that deliver <span className="text-orange-400 font-medium">measurable results</span>.
+      <div className="relative mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 lg:px-8">
+        <p className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-orange-300 backdrop-blur-sm">
+          <span className="h-1.5 w-1.5 rounded-full bg-orange-400" aria-hidden="true" />
+          Digital Creative Agency
         </p>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <button className="group bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 text-white px-10 py-4 rounded-xl text-lg font-semibold min-w-[200px] shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
-            <span className="flex items-center justify-center space-x-2">
-              <span>Get In Touch</span>
-              <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-            </span>
+        <h1
+          id="hero-heading"
+          className="mb-6 text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl"
+        >
+          Grow your brand with <span className="text-orange-400">measurable</span> digital marketing
+        </h1>
+
+        <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-slate-200 sm:text-xl">
+          ENTREHUB transforms businesses through strategic digital marketing, innovative design
+          and data-driven solutions that deliver real results.
+        </p>
+
+        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+            aria-haspopup="dialog"
+            className="group inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-8 text-base font-semibold text-slate-900 shadow-lg transition-colors hover:bg-orange-50 sm:w-auto"
+          >
+            Get in touch
+            <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </button>
-          <button className="group bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-10 py-4 rounded-xl text-lg font-semibold min-w-[200px] hover:bg-white/20 hover:border-white/50 transition-all duration-300 transform hover:-translate-y-1">
-            <span className="flex items-center justify-center space-x-2">
-              <span>View Our Work</span>
-              <span className="group-hover:translate-x-1 transition-transform duration-300">↗</span>
-            </span>
-          </button>
+          <a
+            href="#work"
+            className="inline-flex min-h-12 w-full items-center justify-center rounded-xl border border-white/40 px-8 text-base font-semibold text-white transition-colors hover:border-white hover:bg-white/10 sm:w-auto"
+          >
+            View our work
+          </a>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-8 mt-20 max-w-2xl mx-auto">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-white mb-2">50+</div>
-            <div className="text-sm text-slate-400 uppercase tracking-wide">Projects</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-white mb-2">98%</div>
-            <div className="text-sm text-slate-400 uppercase tracking-wide">Success Rate</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-white mb-2">24/7</div>
-            <div className="text-sm text-slate-400 uppercase tracking-wide">Support</div>
-          </div>
-        </div>
+        <dl className="mx-auto mt-16 grid max-w-2xl grid-cols-3 gap-4 border-t border-white/15 pt-8 sm:gap-8">
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex flex-col-reverse">
+              <dt className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-300 sm:text-sm">
+                {stat.label}
+              </dt>
+              <dd className="text-2xl font-bold text-white sm:text-3xl">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
 
-      {/* Professional decorative elements */}
-      <div className="absolute top-1/4 left-1/4 w-3 h-3 bg-orange-400/40 rounded-full animate-pulse"></div>
-      <div className="absolute top-1/3 right-1/3 w-2 h-2 bg-blue-400/30 rounded-full"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-4 h-4 bg-white/20 rounded-full animate-pulse"></div>
+      {/* Video pause control (WCAG 2.2.2) */}
+      <button
+        type="button"
+        onClick={toggleVideo}
+        aria-label={isPlaying ? 'Pause background video' : 'Play background video'}
+        className="absolute bottom-6 right-4 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/30 bg-navy-deep/50 text-white backdrop-blur-sm transition-colors hover:bg-navy-deep/80 sm:right-6"
+      >
+        {isPlaying ? <Pause className="h-4 w-4" aria-hidden="true" /> : <Play className="h-4 w-4" aria-hidden="true" />}
+      </button>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/60 text-sm font-medium">
-        <div className="flex flex-col items-center space-y-2">
-          <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-bounce"></div>
-          </div>
-          <span className="text-xs uppercase tracking-wide">Scroll</span>
-        </div>
-      </div>
+      <a
+        href="#about"
+        aria-label="Scroll to About section"
+        className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 rounded-full p-2 text-white/70 transition-colors hover:text-white sm:block"
+      >
+        <ChevronDown className="h-6 w-6 motion-safe:animate-bounce" aria-hidden="true" />
+      </a>
+
+      <ContactModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   );
 }

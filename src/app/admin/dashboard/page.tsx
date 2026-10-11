@@ -1,115 +1,92 @@
-import { FileText, MessageSquare, Users, Eye } from 'lucide-react';
+import { FileText, MessageSquare, Users, Eye, Settings, ArrowRight, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function AdminDashboard() {
     // In a real implementation, fetch these stats from the API
     const stats = [
-        {
-            name: 'Total Blog Posts',
-            value: '6',
-            icon: FileText,
-            color: 'bg-blue-500',
-            change: '+2 this week',
-        },
-        {
-            name: 'Contact Messages',
-            value: '0',
-            icon: MessageSquare,
-            color: 'bg-orange-500',
-            change: 'All caught up',
-        },
-        {
-            name: 'Total Views',
-            value: '0',
-            icon: Eye,
-            color: 'bg-green-500',
-            change: 'Start tracking',
-        },
-        {
-            name: 'Authors',
-            value: '6',
-            icon: Users,
-            color: 'bg-purple-500',
-            change: 'Active writers',
-        },
+        { name: 'Total Blog Posts', value: '6', icon: FileText, change: '+2 this week' },
+        { name: 'Contact Messages', value: '0', icon: MessageSquare, change: 'All caught up' },
+        { name: 'Total Views', value: '0', icon: Eye, change: 'Start tracking' },
+        { name: 'Authors', value: '6', icon: Users, change: 'Active writers' },
+    ];
+
+    const actions = [
+        { name: 'Create new post', description: 'Write and publish an article', href: '/admin/blog/new', icon: FileText },
+        { name: 'View messages', description: 'Reply to contact enquiries', href: '/admin/messages', icon: MessageSquare },
+        { name: 'Manage settings', description: 'Site details and preferences', href: '/admin/settings', icon: Settings },
     ];
 
     return (
         <div>
             <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-                <p className="text-gray-600">Welcome back! Here&apos;s what&apos;s happening with your CMS.</p>
+                <h1 className="mb-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Dashboard</h1>
+                <p className="text-slate-600">Welcome back! Here&apos;s what&apos;s happening with your website.</p>
             </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <dl className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {stats.map((stat) => (
-                    <div
-                        key={stat.name}
-                        className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-                    >
-                        <div className="flex items-center justify-between mb-4">
-                            <div className={`p-3 rounded-lg ${stat.color}`}>
-                                <stat.icon className="w-6 h-6 text-white" />
-                            </div>
+                    <div key={stat.name} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+                        <div className="mb-4 flex items-center justify-between">
+                            <dt className="text-sm font-medium text-slate-600">{stat.name}</dt>
+                            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-navy-tint text-navy" aria-hidden="true">
+                                <stat.icon className="h-5 w-5" />
+                            </span>
                         </div>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-1">{stat.value}</h3>
-                        <p className="text-sm text-gray-600 mb-2">{stat.name}</p>
-                        <p className="text-xs text-gray-500">{stat.change}</p>
+                        <dd>
+                            <span className="block text-3xl font-bold text-slate-900">{stat.value}</span>
+                            <span className="mt-1 block text-xs text-slate-600">{stat.change}</span>
+                        </dd>
                     </div>
                 ))}
-            </div>
+            </dl>
 
-            {/* Quick Actions */}
-            <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-8">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Link
-                        href="/admin/blog/new"
-                        className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 hover:bg-blue-50 transition-colors text-center"
-                    >
-                        <FileText className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                        <p className="font-medium text-gray-700">Create New Post</p>
-                    </Link>
-                    <Link
-                        href="/admin/messages"
-                        className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors text-center"
-                    >
-                        <MessageSquare className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                        <p className="font-medium text-gray-700">View Messages</p>
-                    </Link>
-                    <Link
-                        href="/admin/settings"
-                        className="p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-purple-500 hover:bg-purple-50 transition-colors text-center"
-                    >
-                        <Users className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                        <p className="font-medium text-gray-700">Manage Settings</p>
-                    </Link>
-                </div>
-            </div>
+            <section aria-labelledby="quick-actions" className="mb-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+                <h2 id="quick-actions" className="mb-4 text-lg font-semibold text-slate-900">Quick actions</h2>
+                <ul className="grid grid-cols-1 gap-3 md:grid-cols-3">
+                    {actions.map((action) => (
+                        <li key={action.href}>
+                            <Link
+                                href={action.href}
+                                className="group flex items-center gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:border-navy/30 hover:bg-navy-tint/50"
+                            >
+                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-tint text-navy" aria-hidden="true">
+                                    <action.icon className="h-5 w-5" />
+                                </span>
+                                <span className="min-w-0 flex-1">
+                                    <span className="block font-medium text-slate-900">{action.name}</span>
+                                    <span className="block text-sm text-slate-600">{action.description}</span>
+                                </span>
+                                <ArrowRight className="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-navy" aria-hidden="true" />
+                            </Link>
+                        </li>
+                    ))}
+                </ul>
+            </section>
 
-            {/* Welcome Message */}
-            <div className="bg-gradient-to-r from-blue-600 to-orange-500 rounded-xl p-8 text-white">
-                <h2 className="text-2xl font-bold mb-2">🎉 Welcome to EntreHub CMS!</h2>
-                <p className="text-blue-50 mb-4">
+            <section aria-labelledby="welcome" className="on-dark rounded-xl bg-navy-deep p-6 text-white sm:p-8">
+                <h2 id="welcome" className="mb-2 text-xl font-bold sm:text-2xl">Welcome to the ENTREHUB CMS</h2>
+                <p className="mb-6 max-w-2xl text-slate-300">
                     Your blog CMS is ready to use. Start by creating your first blog post or managing your content.
                 </p>
-                <div className="flex gap-4">
+                <div className="flex flex-wrap gap-3">
                     <Link
                         href="/admin/blog"
-                        className="px-6 py-2 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors"
+                        className="inline-flex min-h-11 items-center rounded-lg bg-white px-5 font-semibold text-navy transition-colors hover:bg-navy-tint"
                     >
-                        Manage Blog
+                        Manage blog
                     </Link>
                     <a
                         href="/blog"
                         target="_blank"
-                        className="px-6 py-2 bg-white/20 backdrop-blur-sm text-white font-semibold rounded-lg hover:bg-white/30 transition-colors"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/30 px-5 font-semibold text-white transition-colors hover:bg-white/10"
                     >
-                        View Public Site
+                        View public blog
+                        <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                        <span className="sr-only"> (opens in a new tab)</span>
                     </a>
                 </div>
-            </div>
+            </section>
         </div>
     );
 }

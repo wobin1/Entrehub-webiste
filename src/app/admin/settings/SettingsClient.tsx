@@ -180,7 +180,7 @@ export default function SettingsClient() {
                     <tbody className="divide-y divide-gray-100">
                         {/* Adding row */}
                         {isAdding === type && (
-                            <tr className="bg-blue-50/30">
+                            <tr className="bg-navy-tint/30">
                                 <td className="px-6 py-4">
                                     <div className="space-y-2">
                                         <input
@@ -226,14 +226,14 @@ export default function SettingsClient() {
                                         />
                                     </td>
                                 )}
-                                <td className="px-6 py-4 text-center text-gray-400">-</td>
+                                <td className="px-6 py-4 text-center text-gray-500">-</td>
                                 <td className="px-6 py-4 text-right">
                                     <div className="flex justify-end gap-2">
-                                        <button onClick={() => handleCreate(type)} className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                            <Check className="w-4 h-4" />
+                                        <button type="button" onClick={() => handleCreate(type)} className="p-2 bg-navy text-white rounded-lg hover:bg-navy-hover" aria-label="Confirm">
+                                            <Check className="w-4 h-4" aria-hidden="true" />
                                         </button>
-                                        <button onClick={() => setIsAdding(null)} className="p-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300">
-                                            <X className="w-4 h-4" />
+                                        <button type="button" onClick={() => setIsAdding(null)} className="p-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300" aria-label="Close">
+                                            <X className="w-4 h-4" aria-hidden="true" />
                                         </button>
                                     </div>
                                 </td>
@@ -247,7 +247,7 @@ export default function SettingsClient() {
                                         <div className="space-y-2">
                                             <input
                                                 type="text"
-                                                className="w-full px-3 py-1.5 rounded-lg border border-blue-200"
+                                                className="w-full px-3 py-1.5 rounded-lg border border-navy/25"
                                                 value={editData.name || ''}
                                                 onChange={e => setEditData({ ...editData, name: e.target.value })}
                                             />
@@ -264,12 +264,12 @@ export default function SettingsClient() {
                                         <div className="flex items-center gap-3">
                                             {type === 'author' && (
                                                 <div className="w-8 h-8 rounded-full bg-gray-100 overflow-hidden flex-shrink-0">
-                                                    {(item as Author).avatar ? <img src={(item as Author).avatar!} alt="" className="w-full h-full object-cover" /> : <User className="w-4 h-4 m-2 text-gray-400" />}
+                                                    {(item as Author).avatar ? <img src={(item as Author).avatar!} alt="" className="w-full h-full object-cover" /> : <User className="w-4 h-4 m-2 text-gray-500" />}
                                                 </div>
                                             )}
                                             <div>
                                                 <div className="font-medium text-gray-900">{item.name}</div>
-                                                {type !== 'author' && <div className="text-xs text-gray-400 font-mono">{(item as Category | Tag).slug}</div>}
+                                                {type !== 'author' && <div className="text-xs text-gray-500 font-mono">{(item as Category | Tag).slug}</div>}
                                             </div>
                                         </div>
                                     )}
@@ -279,7 +279,7 @@ export default function SettingsClient() {
                                         {isEditing(item.id) ? (
                                             <input
                                                 type="email"
-                                                className="w-full px-3 py-1.5 rounded-lg border border-blue-200"
+                                                className="w-full px-3 py-1.5 rounded-lg border border-navy/25"
                                                 value={editData.email || ''}
                                                 onChange={e => setEditData({ ...editData, email: e.target.value })}
                                             />
@@ -297,27 +297,27 @@ export default function SettingsClient() {
                                     <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         {isEditing(item.id) ? (
                                             <>
-                                                <button onClick={() => handleSaveEdit(type)} className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                                                    <Save className="w-4 h-4" />
+                                                <button type="button" onClick={() => handleSaveEdit(type)} className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-700" aria-label="Save">
+                                                    <Save className="w-4 h-4" aria-hidden="true" />
                                                 </button>
-                                                <button onClick={cancelEdit} className="p-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300">
-                                                    <X className="w-4 h-4" />
+                                                <button type="button" onClick={cancelEdit} className="p-2 bg-gray-200 text-gray-600 rounded-lg hover:bg-gray-300" aria-label="Close">
+                                                    <X className="w-4 h-4" aria-hidden="true" />
                                                 </button>
                                             </>
                                         ) : (
                                             <>
-                                                <button onClick={() => startEdit(item)} className="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition-colors">
-                                                    <Pencil className="w-4 h-4" />
+                                                <button type="button" onClick={() => startEdit(item)} className="p-2 hover:bg-navy-tint text-navy rounded-lg transition-colors" aria-label="Edit">
+                                                    <Pencil className="w-4 h-4" aria-hidden="true" />
                                                 </button>
-                                                <button
+                                                <button type="button"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         handleDeleteClick(item.id, item.name, type, item._count?.posts || 0);
                                                     }}
                                                     className="p-2 hover:bg-red-50 text-red-600 rounded-lg transition-colors"
                                                     title="Delete"
-                                                >
-                                                    <Trash2 className="w-4 h-4" />
+ aria-label="Delete">
+                                                    <Trash2 className="w-4 h-4" aria-hidden="true" />
                                                 </button>
                                             </>
                                         )}
@@ -378,7 +378,7 @@ export default function SettingsClient() {
                                 console.warn('Could not determine entity type for activeTab:', activeTab);
                             }
                         }}
-                        className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-orange-500 text-white font-semibold rounded-lg hover:shadow-lg transition-all"
+                        className="flex items-center gap-2 px-6 py-2 bg-navy text-white font-semibold rounded-lg hover:bg-navy-hover shadow-sm transition-colors"
                     >
                         <Plus className="w-4 h-4" />
                         Add New
@@ -386,7 +386,7 @@ export default function SettingsClient() {
                 </div>
 
                 <TabsContent value="categories" className="mt-0 space-y-4">
-                    <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100 text-sm text-blue-700">
+                    <div className="p-4 bg-navy-tint/50 rounded-xl border border-navy/25 text-sm text-navy">
                         <strong>Categories</strong> help you organize your posts into high-level topics.
                     </div>
                     {renderTable(categories, 'category')}

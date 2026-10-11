@@ -16,7 +16,9 @@ import {
     Image,
     Users,
     Video,
+    ExternalLink,
 } from 'lucide-react';
+import NextImage from 'next/image';
 
 interface AdminLayoutProps {
     children: React.ReactNode;
@@ -70,6 +72,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         checkAuth();
     }, [pathname, router]);
 
+    useEffect(() => {
+        if (!isSidebarOpen) return;
+        const onKeyDown = (e: KeyboardEvent) => e.key === 'Escape' && setIsSidebarOpen(false);
+        document.addEventListener('keydown', onKeyDown);
+        return () => document.removeEventListener('keydown', onKeyDown);
+    }, [isSidebarOpen]);
+
     const handleLogout = () => {
         localStorage.removeItem('admin_token');
         router.push('/admin/login');
@@ -83,10 +92,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     // Show loading state
     if (isLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="flex min-h-screen items-center justify-center bg-slate-50" role="status">
                 <div className="text-center">
-                    <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                    <p className="text-gray-600">Loading...</p>
+                    <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-navy border-t-transparent" aria-hidden="true" />
+                    <p className="text-slate-600">Loading admin panel…</p>
                 </div>
             </div>
         );
@@ -109,88 +118,122 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         { name: 'Settings', href: '/admin/settings', icon: Settings },
     ];
 
+    const currentPage = navigation.find((item) => pathname === item.href || pathname.startsWith(item.href + '/'));
+
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-slate-50">
+            <a href="#admin-main" className="skip-link">
+                Skip to main content
+            </a>
+
             {/* Mobile sidebar backdrop */}
             {isSidebarOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                    className="fixed inset-0 z-40 bg-navy-deep/60 lg:hidden"
                     onClick={() => setIsSidebarOpen(false)}
+                    aria-hidden="true"
                 />
             )}
 
             {/* Sidebar */}
             <aside
-                className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 lg:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                    }`}
+                id="admin-sidebar"
+                aria-label="Admin"
+                className={`on-dark fixed left-0 top-0 z-50 h-full w-64 transform bg-navy-deep text-white transition-transform duration-300 lg:translate-x-0 ${
+                    isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                }`}
             >
-                <div className="flex flex-col h-full">
-                    {/* Logo */}
-                    <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                        <Link href="/admin/dashboard" className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-orange-500 rounded-lg" />
-                            <span className="text-xl font-bold">EntreHub</span>
+                <div className="flex h-full flex-col">
+                    <div className="flex h-16 items-center justify-between border-b border-white/10 px-5">
+                        <Link href="/admin/dashboard" className="flex items-center gap-2.5 rounded-lg">
+                            <span className="h-8 w-8 overflow-hidden rounded-lg ring-1 ring-white/20">
+                                <NextImage src="/images/logo.jpeg" alt="" width={32} height={32} className="h-full w-full object-cover" />
+                            </span>
+                            <span className="text-lg font-bold tracking-tight">
+                                ENTRE<span className="text-orange-400">HUB</span>
+                            </span>
                         </Link>
                         <button
+                            type="button"
                             onClick={() => setIsSidebarOpen(false)}
-                            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+                            aria-label="Close menu"
+                            className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-slate-300 hover:bg-white/10 hover:text-white lg:hidden"
                         >
-                            <X className="w-5 h-5" />
+                            <X className="h-5 w-5" aria-hidden="true" />
                         </button>
                     </div>
 
-                    {/* Navigation */}
-                    <nav className="flex-1 p-4 space-y-2">
-                        {navigation.map((item) => {
-                            const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
-                            return (
-                                <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                                        ? 'bg-blue-50 text-blue-600 font-medium'
-                                        : 'text-gray-700 hover:bg-gray-100'
-                                        }`}
-                                >
-                                    <item.icon className="w-5 h-5" />
-                                    {item.name}
-                                </Link>
-                            );
-                        })}
+                    <nav aria-label="Admin sections" className="flex-1 overflow-y-auto p-3">
+                        <ul className="space-y-1">
+                            {navigation.map((item) => {
+                                const isActive = item === currentPage;
+                                return (
+                                    <li key={item.name}>
+                                        <Link
+                                            href={item.href}
+                                            onClick={() => setIsSidebarOpen(false)}
+                                            aria-current={isActive ? 'page' : undefined}
+                                            className={`flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm transition-colors ${
+                                                isActive
+                                                    ? 'bg-white/10 font-semibold text-white shadow-[inset_3px_0_0_#fb923c]'
+                                                    : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                                            }`}
+                                        >
+                                            <item.icon className="h-5 w-5" aria-hidden="true" />
+                                            {item.name}
+                                        </Link>
+                                    </li>
+                                );
+                            })}
+                        </ul>
                     </nav>
 
-                    {/* Logout */}
-                    <div className="p-4 border-t border-gray-200">
-                        <button
-                            onClick={handleLogout}
-                            className="flex items-center gap-3 px-4 py-3 w-full text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    <div className="space-y-1 border-t border-white/10 p-3">
+                        <a
+                            href="/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
                         >
-                            <LogOut className="w-5 h-5" />
-                            Logout
+                            <ExternalLink className="h-5 w-5" aria-hidden="true" />
+                            View website
+                            <span className="sr-only"> (opens in a new tab)</span>
+                        </a>
+                        <button
+                            type="button"
+                            onClick={handleLogout}
+                            className="flex min-h-11 w-full items-center gap-3 rounded-lg px-3 text-sm text-slate-300 transition-colors hover:bg-white/5 hover:text-white"
+                        >
+                            <LogOut className="h-5 w-5" aria-hidden="true" />
+                            Log out
                         </button>
                     </div>
                 </div>
             </aside>
 
-            {/* Main content */}
             <div className="lg:ml-64">
-                {/* Top bar */}
-                <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
-                    <div className="flex items-center justify-between px-6 py-4">
+                <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
+                    <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
                         <button
+                            type="button"
                             onClick={() => setIsSidebarOpen(true)}
-                            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg"
+                            aria-label="Open menu"
+                            aria-expanded={isSidebarOpen}
+                            aria-controls="admin-sidebar"
+                            className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-slate-700 hover:bg-slate-100 lg:hidden"
                         >
-                            <Menu className="w-6 h-6" />
+                            <Menu className="h-6 w-6" aria-hidden="true" />
                         </button>
-                        <div className="flex items-center gap-4 ml-auto">
-                            <span className="text-sm text-gray-600">Admin Panel</span>
-                        </div>
+                        <p className="text-sm font-medium text-slate-600">
+                            Admin <span aria-hidden="true">/</span>{' '}
+                            <span className="text-slate-900">{currentPage?.name ?? 'Panel'}</span>
+                        </p>
                     </div>
                 </header>
 
-                {/* Page content */}
-                <main className="p-6">{children}</main>
+                <main id="admin-main" tabIndex={-1} className="mx-auto max-w-7xl p-4 focus:outline-none sm:p-6 lg:p-8">
+                    {children}
+                </main>
             </div>
         </div>
     );

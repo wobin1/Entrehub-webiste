@@ -117,7 +117,7 @@ export default function MessagesClient() {
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'UNREAD': return 'bg-blue-100 text-blue-700 border-blue-200';
+            case 'UNREAD': return 'bg-navy-tint text-navy border-navy/25';
             case 'READ': return 'bg-green-100 text-green-700 border-green-200';
             case 'REPLIED': return 'bg-purple-100 text-purple-700 border-purple-200';
             case 'ARCHIVED': return 'bg-gray-100 text-gray-700 border-gray-200';
@@ -129,13 +129,14 @@ export default function MessagesClient() {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-gray-100">
                 <div className="relative w-full md:w-96">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                     <input
                         type="text"
                         placeholder="Search messages..."
+                            aria-label="Search messages"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                        className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-navy/30 focus:border-navy transition-all"
                     />
                 </div>
                 <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
@@ -144,7 +145,7 @@ export default function MessagesClient() {
                             key={status}
                             onClick={() => setStatusFilter(status)}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${statusFilter === status
-                                ? 'bg-blue-600 text-white'
+                                ? 'bg-navy text-white'
                                 : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                                 }`}
                         >
@@ -165,7 +166,7 @@ export default function MessagesClient() {
                     <div className="divide-y divide-gray-100 max-h-[600px] overflow-y-auto">
                         {isLoading ? (
                             <div className="p-8 text-center">
-                                <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                                <div className="w-6 h-6 border-2 border-navy border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                                 <p className="text-sm text-gray-500">Loading messages...</p>
                             </div>
                         ) : filteredMessages.length === 0 ? (
@@ -181,14 +182,14 @@ export default function MessagesClient() {
                                         setSelectedMessage(m);
                                         if (m.status === 'UNREAD') updateMessageStatus(m.id, 'READ');
                                     }}
-                                    className={`w-full text-left p-4 hover:bg-blue-50/50 transition-all relative group ${selectedMessage?.id === m.id ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+                                    className={`w-full text-left p-4 hover:bg-navy-tint/50 transition-all relative group ${selectedMessage?.id === m.id ? 'bg-navy-tint border-l-4 border-navy' : ''
                                         }`}
                                 >
                                     <div className="flex justify-between items-start mb-1">
                                         <span className={`font-semibold text-sm ${m.status === 'UNREAD' ? 'text-gray-900' : 'text-gray-600'}`}>
                                             {m.name}
                                         </span>
-                                        <span className="text-[10px] text-gray-400">
+                                        <span className="text-[10px] text-gray-500">
                                             {format(new Date(m.createdAt), 'MMM dd')}
                                         </span>
                                     </div>
@@ -227,19 +228,19 @@ export default function MessagesClient() {
                                     >
                                         {selectedMessage.status === 'ARCHIVED' ? <RotateCcw className="w-5 h-5" /> : <Archive className="w-5 h-5" />}
                                     </button>
-                                    <button
+                                    <button type="button"
                                         onClick={() => handleDeleteClick(selectedMessage)}
                                         className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-all"
                                         title="Delete"
-                                    >
-                                        <Trash2 className="w-5 h-5" />
+ aria-label="Delete">
+                                        <Trash2 className="w-5 h-5" aria-hidden="true" />
                                     </button>
                                 </div>
                             </div>
 
                             <div className="flex-1 p-8 space-y-6">
                                 <div>
-                                    <h4 className="text-xs uppercase tracking-wider text-gray-400 font-bold mb-4">Message Content</h4>
+                                    <h4 className="text-xs uppercase tracking-wider text-gray-500 font-bold mb-4">Message Content</h4>
                                     <div className="bg-gray-50 p-6 rounded-2xl text-gray-700 leading-relaxed whitespace-pre-wrap min-h-[200px] border border-gray-100">
                                         {selectedMessage.message}
                                     </div>
@@ -248,14 +249,14 @@ export default function MessagesClient() {
                                 <div className="flex gap-3">
                                     <button
                                         onClick={() => updateMessageStatus(selectedMessage.id, 'REPLIED')}
-                                        className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all"
+                                        className="flex items-center gap-2 px-6 py-2 bg-navy text-white rounded-lg font-medium hover:bg-navy-hover transition-all"
                                     >
                                         <CheckCircle className="w-4 h-4" />
                                         Mark as Replied
                                     </button>
                                     <a
                                         href={`mailto:${selectedMessage.email}?subject=RE: Contact Inquiry from EntreHub`}
-                                        className="flex items-center gap-2 px-6 py-2 bg-white text-blue-600 border border-blue-200 rounded-lg font-medium hover:bg-blue-50 transition-all"
+                                        className="flex items-center gap-2 px-6 py-2 bg-white text-navy border border-navy/25 rounded-lg font-medium hover:bg-navy-tint transition-all"
                                     >
                                         Reply via Email
                                     </a>
@@ -269,12 +270,12 @@ export default function MessagesClient() {
                             </div>
                         </div>
                     ) : (
-                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center p-12 h-full min-h-[500px] text-gray-400">
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col items-center justify-center p-12 h-full min-h-[500px] text-gray-500">
                             <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center mb-4">
                                 <Eye className="w-10 h-10 opacity-20" />
                             </div>
                             <p className="text-lg font-medium">Select a message to view details</p>
-                            <p className="text-sm text-gray-400 mt-1">Read, reply, or archive messages from here</p>
+                            <p className="text-sm text-gray-500 mt-1">Read, reply, or archive messages from here</p>
                         </div>
                     )}
                 </div>

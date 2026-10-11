@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Search, Pencil, Trash2, Eye } from 'lucide-react';
+import { Plus, Search, Pencil, Trash2, Eye, Star, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { getAdminBlogPosts, deleteBlogPost } from '@/lib/api/admin';
 import type { BlogPost } from '@/types/admin';
@@ -76,7 +76,7 @@ export default function AdminBlogPage() {
     if (isLoading) {
         return (
             <div className="flex items-center justify-center py-12">
-                <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                <div className="w-8 h-8 border-4 border-navy border-t-transparent rounded-full animate-spin" />
             </div>
         );
     }
@@ -93,7 +93,7 @@ export default function AdminBlogPage() {
                 </div>
                 <button
                     onClick={() => router.push('/admin/blog/new')}
-                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-orange-500 text-white font-semibold rounded-lg hover:shadow-lg transition-all"
+                    className="flex items-center gap-2 px-6 py-3 bg-navy text-white font-semibold rounded-lg hover:bg-navy-hover shadow-sm transition-colors"
                 >
                     <Plus className="w-5 h-5" />
                     New Post
@@ -105,13 +105,14 @@ export default function AdminBlogPage() {
                 <div className="flex flex-col md:flex-row gap-4">
                     {/* Search */}
                     <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                         <input
                             type="text"
                             placeholder="Search posts..."
+                            aria-label="Search posts"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                         />
                     </div>
 
@@ -119,7 +120,7 @@ export default function AdminBlogPage() {
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value as 'all' | 'published' | 'draft')}
-                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                     >
                         <option value="all">All Posts</option>
                         <option value="published">Published</option>
@@ -163,8 +164,9 @@ export default function AdminBlogPage() {
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-3">
                                             {post.featured && (
-                                                <span className="text-yellow-500" title="Featured">
-                                                    ⭐
+                                                <span className="text-orange-600" title="Featured">
+                                                    <Star className="h-4 w-4 fill-current" aria-hidden="true" />
+                                                    <span className="sr-only">Featured</span>
                                                 </span>
                                             )}
                                             <div>
@@ -177,7 +179,7 @@ export default function AdminBlogPage() {
                                     </td>
                                     <td className="px-6 py-4 text-sm text-gray-700">{post.author?.name || 'Unknown'}</td>
                                     <td className="px-6 py-4">
-                                        <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
+                                        <span className="px-2 py-1 text-xs font-medium bg-navy-tint text-navy-hover rounded-full">
                                             {post.category?.name || 'Uncategorized'}
                                         </span>
                                     </td>
@@ -203,27 +205,27 @@ export default function AdminBlogPage() {
                                             <a
                                                 href={`/blog/${post.slug}`}
                                                 target="_blank"
-                                                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                className="p-2 text-gray-600 hover:text-navy hover:bg-navy-tint rounded-lg transition-colors"
                                                 title="View"
                                             >
                                                 <Eye className="w-4 h-4" />
                                             </a>
-                                            <button
+                                            <button type="button"
                                                 onClick={() => router.push(`/admin/blog/${post.id}/edit`)}
-                                                className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                className="p-2 text-gray-600 hover:text-navy hover:bg-navy-tint rounded-lg transition-colors"
                                                 title="Edit"
-                                            >
-                                                <Pencil className="w-4 h-4" />
+ aria-label="Edit">
+                                                <Pencil className="w-4 h-4" aria-hidden="true" />
                                             </button>
-                                            <button
+                                            <button type="button"
                                                 onClick={() => handleDelete(post.slug)}
                                                 className={`p-2 rounded-lg transition-colors ${deleteConfirm === post.slug
                                                     ? 'text-white bg-red-600 hover:bg-red-700'
                                                     : 'text-gray-600 hover:text-red-600 hover:bg-red-50'
                                                     }`}
                                                 title={deleteConfirm === post.slug ? 'Click again to confirm' : 'Delete'}
-                                            >
-                                                <Trash2 className="w-4 h-4" />
+ aria-label="Delete">
+                                                <Trash2 className="w-4 h-4" aria-hidden="true" />
                                             </button>
                                         </div>
                                     </td>
@@ -235,7 +237,7 @@ export default function AdminBlogPage() {
 
                 {filteredPosts.length === 0 && (
                     <div className="text-center py-12">
-                        <div className="text-gray-400 text-5xl mb-4">📝</div>
+                        <FileText className="mx-auto mb-4 h-10 w-10 text-gray-500" aria-hidden="true" />
                         <h3 className="text-lg font-medium text-gray-900 mb-2">No posts found</h3>
                         <p className="text-gray-600 mb-4">
                             {searchQuery || statusFilter !== 'all'
@@ -245,7 +247,7 @@ export default function AdminBlogPage() {
                         {!searchQuery && statusFilter === 'all' && (
                             <button
                                 onClick={() => router.push('/admin/blog/new')}
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-orange-500 text-white font-semibold rounded-lg hover:shadow-lg transition-all"
+                                className="inline-flex items-center gap-2 px-6 py-3 bg-navy text-white font-semibold rounded-lg hover:bg-navy-hover shadow-sm transition-colors"
                             >
                                 <Plus className="w-5 h-5" />
                                 Create First Post

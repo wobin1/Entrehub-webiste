@@ -137,7 +137,7 @@ export default function PortfolioDialog({
                                 required
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 font-medium"
                             />
                         </div>
                         <div>
@@ -149,7 +149,7 @@ export default function PortfolioDialog({
                                     required
                                     value={formData.category}
                                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none font-medium"
+                                    className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 appearance-none font-medium"
                                     disabled={isLoadingCategories}
                                 >
                                     <option value="" disabled>Select Category</option>
@@ -161,7 +161,7 @@ export default function PortfolioDialog({
                                 </select>
                                 {isLoadingCategories && (
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                        <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+                                        <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
                                     </div>
                                 )}
                             </div>
@@ -177,7 +177,7 @@ export default function PortfolioDialog({
                             rows={3}
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 resize-none"
                         />
                     </div>
 
@@ -190,7 +190,7 @@ export default function PortfolioDialog({
                                 type="text"
                                 value={formData.metric}
                                 onChange={(e) => setFormData({ ...formData, metric: e.target.value })}
-                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                             />
                         </div>
                         <div>
@@ -201,7 +201,7 @@ export default function PortfolioDialog({
                                 type="text"
                                 value={formData.metricLabel}
                                 onChange={(e) => setFormData({ ...formData, metricLabel: e.target.value })}
-                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                             />
                         </div>
                     </div>
@@ -215,7 +215,7 @@ export default function PortfolioDialog({
                             required
                             value={formData.image}
                             onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                         />
                     </div>
 
@@ -227,7 +227,7 @@ export default function PortfolioDialog({
                             type="number"
                             value={formData.order}
                             onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30"
                         />
                     </div>
 
@@ -242,7 +242,7 @@ export default function PortfolioDialog({
                         <button
                             type="submit"
                             disabled={isSaving}
-                            className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                            className="flex items-center gap-2 px-6 py-2 bg-navy text-white rounded-lg hover:bg-navy-hover transition-colors disabled:opacity-50"
                         >
                             {isSaving && <Loader2 className="w-4 h-4 animate-spin" />}
                             {project ? 'Save Changes' : 'Create Project'}

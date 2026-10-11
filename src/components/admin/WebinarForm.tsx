@@ -119,7 +119,7 @@ export default function WebinarForm({
                     <div className="space-y-2">
                         <Label htmlFor="title">Webinar Title</Label>
                         <div className="relative">
-                            <FileText className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                            <FileText className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                             <Input
                                 id="title"
                                 required
@@ -139,7 +139,7 @@ export default function WebinarForm({
                             placeholder="Briefly describe what the webinar is about..."
                             value={formData.description}
                             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm"
+                            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy/30 resize-none text-sm"
                         />
                     </div>
 
@@ -147,7 +147,7 @@ export default function WebinarForm({
                         <div className="space-y-2">
                             <Label htmlFor="scheduledAt">Schedule Date & Time</Label>
                             <div className="relative">
-                                <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                                <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                                 <Input
                                     id="scheduledAt"
                                     type="datetime-local"
@@ -161,7 +161,7 @@ export default function WebinarForm({
                         <div className="space-y-2">
                             <Label htmlFor="meetingLink">Meeting Link (Optional)</Label>
                             <div className="relative">
-                                <LinkIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                                <LinkIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
                                 <Input
                                     id="meetingLink"
                                     type="url"
@@ -174,7 +174,7 @@ export default function WebinarForm({
                         </div>
                     </div>
 
-                    <div className="flex items-center space-x-2 bg-blue-50 p-4 rounded-xl">
+                    <div className="flex items-center space-x-2 bg-navy-tint p-4 rounded-xl">
                         <Checkbox 
                             id="isActive" 
                             checked={formData.isActive}
@@ -183,7 +183,7 @@ export default function WebinarForm({
                         <div className="grid gap-1.5 leading-none">
                             <Label htmlFor="isActive" className="text-sm font-medium flex items-center gap-2">
                                 Set as Active Webinar
-                                <CheckCircle className="w-3 h-3 text-blue-600" />
+                                <CheckCircle className="w-3 h-3 text-navy" />
                             </Label>
                             <p className="text-xs text-gray-500">
                                 This will be the webinar shown on the registration page. Deactivates other webinars.
@@ -202,7 +202,7 @@ export default function WebinarForm({
                         <Button
                             type="submit"
                             disabled={isSaving}
-                            className="bg-blue-600 hover:bg-blue-700 text-white min-w-[140px]"
+                            className="bg-navy hover:bg-navy-hover text-white min-w-[140px]"
                         >
                             {isSaving ? (
                                 <>

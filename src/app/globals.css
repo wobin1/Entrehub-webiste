@@ -52,16 +52,73 @@
 
 html {
   scroll-behavior: smooth;
+  /* Keep anchor targets clear of the fixed 80px navigation */
+  scroll-padding-top: 5rem;
 }
 
 body {
   line-height: 1.6;
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Visible, consistent keyboard focus (WCAG 2.4.7 / 2.4.11) */
+:focus-visible {
+  outline: 3px solid #1b365d;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.on-dark :focus-visible,
+.on-dark:focus-visible {
+  outline-color: #fdba74;
+}
+
+/* Skip link: hidden until focused */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 200;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  background: #0f1f38;
+  color: #fff;
+  font-weight: 600;
+  transform: translateY(-200%);
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* Respect users who prefer reduced motion (WCAG 2.3.3) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Professional Navy Button Styles */
 .btn-primary {
-  background: linear-gradient(135deg, var(--navy-primary), var(--navy-dark));
+  background: var(--navy-primary);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -87,7 +144,7 @@ body {
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3);
-  background: linear-gradient(135deg, var(--navy-dark), var(--navy-primary));
+  background: var(--navy-dark);
 }
 
 .btn-secondary:hover {
@@ -100,6 +157,12 @@ body {
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-inter: var(--font-inter), sans-serif;
+
+  /* Brand navy palette */
+  --color-navy: #1b365d;
+  --color-navy-hover: #132745;
+  --color-navy-tint: #eaf0f7;
+  --color-navy-deep: #0f1f38;
 
   --color-navy-primary: #1e3a8a;
   --color-navy-secondary: #3b82f6;
